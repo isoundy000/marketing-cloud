@@ -1,0 +1,151 @@
+<!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
+<configuration scan="true" scanPeriod="10 seconds">
+
+  <!-- Simple file output -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+    <encoder>
+        <pattern>
+            [ %-5level] [%thread] [%date{yyyy-MM-dd HH:mm:ss}] %logger{96} [%line] - %msg%n
+        </pattern>
+        <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rollover daily 配置日志所生成的目录以及生成文件名的规则 -->
+      <fileNamePattern>${LOG_FILE}/mktlog-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- or whenever the file size reaches 64 MB -->
+        <maxFileSize>64 MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+
+
+    <!-- 去除主日志中的sql日志 -->
+    <filter class="ch.qos.logback.core.filter.EvaluatorFilter">      
+      <evaluator> <!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator -->
+        <expression>
+            if ( level >= INFO ) {
+                return true;
+            }
+            if ( level >= DEBUG &amp;&amp; !logger.startsWith("cn.rongcapital.mkt.dao.")) {
+                return true;
+            }
+            return false;
+        </expression>
+      </evaluator>
+      <OnMatch>ACCEPT</OnMatch>
+      <OnMismatch>DENY</OnMismatch>
+    </filter>
+    <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
+    <prudent>true</prudent>
+  </appender>
+  
+  
+  
+  <!-- 设置sql日志输出路径及规则 -->
+  <appender name="SQLFILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  
+    <!-- 去除sql日志中和基类相关的日志 -->
+    <filter class="ch.qos.logback.core.filter.EvaluatorFilter">      
+      <evaluator> <!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator -->
+        <expression>
+            if ( logger.endsWith(".insert") ||
+            logger.endsWith(".updateById") ||
+            logger.endsWith(".selectList") ||
+            logger.endsWith(".selectListByIdList") ||
+            logger.endsWith(".selectListCount") ) {
+                return true;
+            }
+            return false;
+        </expression>
+      </evaluator>
+      <OnMatch>DENY</OnMatch>
+      <OnMismatch>ACCEPT</OnMismatch>
+    </filter>
+  
+    <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+    <encoder>
+        <pattern>
+            [ %-5level] [%thread] [%date{yyyy-MM-dd HH:mm:ss}] %logger{96} [%line] - %msg%n
+        </pattern>
+        <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <!-- rollover daily 配置日志所生成的目录以及生成文件名的规则 -->
+      <fileNamePattern>${LOG_FILE}/sqlmktlog-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy
+          class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <!-- or whenever the file size reaches 64 MB -->
+        <maxFileSize>64 MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+    <!-- Safely log to the same file from multiple JVMs. Degrades performance! -->
+    <prudent>true</prudent>
+  </appender>
+
+  <!-- Console output -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoder defaults to ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+      <encoder>
+          <pattern>
+              [ %-5level] [%thread] [%date{yyyy-MM-dd HH:mm:ss}] %logger{96} [%line] - %msg%n
+          </pattern>
+          <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+      </encoder>
+    <!-- 去除sql日志中和基类相关的日志 -->
+    <filter class="ch.qos.logback.core.filter.EvaluatorFilter">      
+      <evaluator> <!-- defaults to type ch.qos.logback.classic.boolex.JaninoEventEvaluator -->
+        <expression>
+            if(level > DEBUG) {
+                return false;
+            }
+            if ( logger.endsWith(".insert") ||
+            logger.endsWith(".updateById") ||
+            logger.endsWith(".selectList") ||
+            logger.endsWith(".selectListByIdList") ||
+            logger.endsWith(".selectListCount") ) {
+                return true;
+            }
+            return false;
+        </expression>
+      </evaluator>
+      <OnMatch>DENY</OnMatch>
+      <OnMismatch>ACCEPT</OnMismatch>
+    </filter>
+  </appender>
+  <!-- 配置打印sql 打印结果：设置级别为TRACE-->
+    <logger name="cn.rongcapital.mkt.dao" level="INFO" additivity="true">
+        <!-- 打印sql日志到sql日志文件 -->
+        <appender-ref ref="SQLFILE" />
+        <!-- 打印sql日志到Console -->
+        <appender-ref ref="STDOUT" />
+        
+    </logger>
+    <!-- 屏蔽TaskScheduleDao的sql日志 -->
+    <logger name="cn.rongcapital.mkt.dao.TaskScheduleDao" level="info"
+        additivity="true">
+        <appender-ref ref="SQLFILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="cn.rongcapital.mkt.dao.SystemTagResultDao" level="info"
+        additivity="true">
+        <appender-ref ref="SQLFILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="cn.rongcapital.mkt.dao.TagValueCountDao" level="info"
+        additivity="true">
+        <appender-ref ref="SQLFILE" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+    
+  <!-- Enable FILE and STDOUT appenders for all log messages.
+       By default, only log at level INFO and above. -->
+  <root level="INFO">
+    <appender-ref ref="FILE" />
+    <appender-ref ref="STDOUT" />
+  </root>
+</configuration>
+
+

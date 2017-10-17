@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.ImportTemplateDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id,templ_type as templType,templ_name as templName,field_name as fieldName,field_code as fieldCode,selected]]>
+	</sql>
+	
+	<sql id="QUERY_TEMPLATE_LIST">
+		<![CDATA[ templ_type,templ_name]]>
+	</sql>
+	
+	<sql id="QUERY_ALIAS_COLUMN_LIST">
+		<![CDATA[ id,templ_type as templType,templ_name as templName,field_name as fieldName,field_code as fieldCode,selected]]>
+	</sql>
+
+	<sql id="UPDATE_SELECTED_STATUS_LIST">
+		<![CDATA[ templ_name,field_name,selected]]>
+	</sql>
+	
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_template]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="templType != null"><![CDATA[ AND templ_type = #{templType}]]></if>
+		    	<if test="templName != null"><![CDATA[ AND templ_name = #{templName}]]></if>
+		    	<if test="fieldName != null"><![CDATA[ AND field_name = #{fieldName}]]></if>
+		    	<if test="fieldCode != null"><![CDATA[ AND field_code = #{fieldCode}]]></if>
+		    	<if test="selected != null"><![CDATA[ AND selected = #{selected}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="templType != null"><![CDATA[templ_type = #{templType},]]></if>
+		    	<if test="templName != null"><![CDATA[templ_name = #{templName},]]></if>
+		    	<if test="fieldName != null"><![CDATA[field_name = #{fieldName},]]></if>
+		    	<if test="fieldCode != null"><![CDATA[field_code = #{fieldCode},]]></if>
+		    	<if test="selected != null"><![CDATA[selected = #{selected},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ImportTemplate" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO import_template (templ_type,templ_name,field_name,field_code,selected,create_time)
+			VALUES
+			(
+			  #{templType},
+			  #{templName},
+			  #{fieldName},
+			  #{fieldCode},
+			  #{selected},
+			  now()
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.ImportTemplate">
+		<![CDATA[UPDATE import_template]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.ImportTemplate" resultType="cn.rongcapital.mkt.po.ImportTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.ImportTemplate" resultType="cn.rongcapital.mkt.po.ImportTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.ImportTemplate" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<select id="selectTemplateList" resultType="java.util.Map">
+		SELECT
+		<include refid="QUERY_TEMPLATE_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		where templ_type > 0
+		group by templ_type
+	</select>
+	
+	<!-- 查询自定义视图字段列表 -->
+	<select id="selectViewListByTemplType" parameterType="cn.rongcapital.mkt.po.ImportTemplate" resultType="cn.rongcapital.mkt.po.ImportTemplate">
+		SELECT
+			id,templ_type as templType ,templ_name as templName,field_name as fieldName,field_code as fieldCode,selected
+		FROM 
+			import_template
+		WHERE 
+			templ_type = #{templType}
+	</select>
+	
+	<update id="updateByTemplNameandFieldName" parameterType="cn.rongcapital.mkt.po.ImportTemplate">
+		UPDATE
+			import_template
+		SET 
+			selected = #{selected}
+		WHERE
+			templ_name = #{templName}
+		AND	  
+			field_name = #{fieldName}
+	</update>
+	
+	<select id="selectSelectedTemplateList" parameterType="cn.rongcapital.mkt.po.ImportTemplate" resultType="cn.rongcapital.mkt.po.ImportTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_ALIAS_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<select id="selectFileColumn" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT field_name,field_code
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE templ_type = #{templ_type}
+	</select>
+
+	<select id="selectTempleNameByType" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT distinct templ_name
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE templ_type = #{templ_type}
+	</select>
+	
+	<!-- 查询各个data表对应的md_type , 取名xx_row只是为了统一JSon数据 -->
+	<select id="selectMainCountPair" resultType="java.util.Map">
+		SELECT
+			data_party_rows,data_arch_point_rows,data_customer_tags_rows,data_login_rows,data_member_rows,data_payment_rows,data_population_rows,data_shopping_rows
+		FROM
+			(select distinct(templ_type) as data_party_rows from import_template where templ_name='主数据') as data_party_result,
+			(select distinct(templ_type) as data_arch_point_rows from import_template where templ_name='埋点统计') as data_arch_point,
+			(select distinct(templ_type) as data_customer_tags_rows from import_template where templ_name='客户标签') as data_customer_tags,
+			(select distinct(templ_type) as data_login_rows from import_template where templ_name='登录行为') as data_login,
+			(select distinct(templ_type) as data_member_rows from import_template where templ_name='会员卡记录') as data_member,
+			(select distinct(templ_type) as data_payment_rows from import_template where templ_name='支付记录') as data_payment,
+			(select distinct(templ_type) as data_population_rows from import_template where templ_name='人口属性') as data_population,
+			(select distinct(templ_type) as data_shopping_rows from import_template where templ_name='购物记录') as data_shopping
+	</select>
+	
+	<select id="selectTemplTypePairs" resultType="cn.rongcapital.mkt.po.ImportTemplate">
+		SELECT templ_type as templType,templ_name as templName
+		<include refid="QUERY_FROM_TABLE"/>
+		group by templ_type,templ_name
+	</select>
+	
+	<update id="updateSelectedByTemplType" parameterType="cn.rongcapital.mkt.po.ImportTemplate">
+		UPDATE
+			import_template
+		SET 
+			selected = #{selected}
+		WHERE
+			templ_type = #{templType}
+		AND	  
+			field_name = #{fieldName}
+	</update>
+	
+</mapper>

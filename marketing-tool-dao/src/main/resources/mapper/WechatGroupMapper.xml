@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.WechatGroupDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,group_id as groupId,group_name as groupName,group_nickname as groupNickname,header_image as headerImage,wx_acct as wxAcct,status as status,create_time as createTime,update_time as updateTime,count as count]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM wechat_group]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="groupId != null"><![CDATA[ AND group_id = #{groupId}]]></if>
+		    	<if test="groupName != null"><![CDATA[ AND group_name = #{groupName}]]></if>
+		    	<if test="groupNickname != null"><![CDATA[ AND group_nickname = #{groupNickname}]]></if>
+		    	<if test="headerImage != null"><![CDATA[ AND header_image = #{headerImage}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="count != null"><![CDATA[ AND count = #{count}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="groupId != null"><![CDATA[group_id = #{groupId},]]></if>
+		    	<if test="groupName != null"><![CDATA[group_name = #{groupName},]]></if>
+		    	<if test="groupNickname != null"><![CDATA[group_nickname = #{groupNickname},]]></if>
+		    	<if test="headerImage != null"><![CDATA[header_image = #{headerImage},]]></if>
+		    	<if test="wxAcct != null"><![CDATA[wx_acct = #{wxAcct},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="count != null"><![CDATA[count = #{count}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatGroup" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO wechat_group (group_id,group_name,group_nickname,header_image,wx_acct,create_time,count)
+			VALUES
+			(
+			  #{groupId},
+			  #{groupName},
+			  #{groupNickname},
+			  #{headerImage},
+			  #{wxAcct},
+			  now(),
+			  #{count}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.WechatGroup">
+		<![CDATA[UPDATE wechat_group]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.WechatGroup" resultType="cn.rongcapital.mkt.po.WechatGroup">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.WechatGroup" resultType="cn.rongcapital.mkt.po.WechatGroup">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.WechatGroup" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<select id="selectGroupId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE group_name = #{group_name} AND wx_acct = #{wx_acct}
+	</select>
+
+	<select id="selectGroupIdByUcode" parameterType="java.util.Map" resultType="java.lang.Long">
+		select id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE group_id = #{group_id} AND wx_acct = #{wx_acct}
+	</select>
+
+	<insert id="insertWechatGroup" parameterType="java.util.Map">
+		INSERT INTO wechat_group (group_name,wx_acct)
+		VALUES
+		(
+		#{group_name},
+		#{wx_acct}
+		)
+	</insert>
+
+	<insert id="insertWechatGroupByUcode" parameterType="java.util.Map">
+		INSERT INTO wechat_group (group_id,wx_acct)
+		VALUES
+		(
+		#{group_id},
+		#{wx_acct}
+		)
+	</insert>
+
+	<update id="updateInfoById" parameterType="java.util.Map">
+		UPDATE wechat_group
+		SET group_name = #{group_name}, header_image = #{header_image}
+		WHERE id = #{id}
+	</update>
+
+	<select id="selectNewGroupList" parameterType="java.util.List" resultType="java.util.Map">
+		select id as import_group_id, group_name as name, wx_acct
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id not in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectFirstImportGroupList" resultType="java.util.Map">
+		select id as import_group_id, group_name as name, wx_acct
+		<include refid="QUERY_FROM_TABLE"/>
+	</select>
+
+	<delete id="deleteRecordByUin" parameterType="java.lang.String">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_acct = #{uin}
+	</delete>
+	
+	<update id="updateInfoByGroupWxCode" parameterType="cn.rongcapital.mkt.po.WechatGroup">
+		UPDATE wechat_group SET count = #{count}
+		<![CDATA[WHERE wx_acct = #{wxAcct} and group_id = #{groupId}]]>
+	</update>
+	
+	<update id="updateStatusByWxAcct" parameterType="cn.rongcapital.mkt.po.WechatGroup">
+		<![CDATA[UPDATE wechat_group]]>
+		<![CDATA[ set status = 1]]>
+        <![CDATA[ WHERE wx_acct = #{wxAcct}]]>
+	</update>
+	
+</mapper>

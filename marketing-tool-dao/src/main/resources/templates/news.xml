@@ -1,0 +1,17 @@
+<xml>
+<ToUserName><![CDATA[${to}]]></ToUserName>
+<FromUserName><![CDATA[${from}]]></FromUserName>
+<CreateTime>${createTime}</CreateTime>
+<MsgType><![CDATA[news]]></MsgType>
+<ArticleCount>${size}</ArticleCount>
+<Articles>
+<#list articles as art>
+<item>
+<Title><![CDATA[art.title]]></Title> 
+<Description><![CDATA[art.description]]></Description>
+<PicUrl><![CDATA[art.picurl]]></PicUrl>
+<Url><![CDATA[art.url]]></Url>
+</item>
+</#list>
+</Articles>
+</xml>

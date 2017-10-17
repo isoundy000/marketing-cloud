@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.DefaultContactTemplateDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,field_name as fieldName,field_code as fieldCode,is_selected as isSelected,is_required as isRequired,is_checked as isChecked,default_shown_seq as defaultShownSeq,status as status,is_primary_key as isPrimaryKey,field_type as fieldType]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM default_contact_template]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="fieldName != null"><![CDATA[ AND field_name = #{fieldName}]]></if>
+		    	<if test="fieldCode != null"><![CDATA[ AND field_code = #{fieldCode}]]></if>
+		    	<if test="isSelected != null"><![CDATA[ AND is_selected = #{isSelected}]]></if>
+		    	<if test="isRequired != null"><![CDATA[ AND is_required = #{isRequired}]]></if>
+		    	<if test="isChecked != null"><![CDATA[ AND is_checked = #{isChecked}]]></if>
+		    	<if test="defaultShownSeq != null"><![CDATA[ AND default_shown_seq = #{defaultShownSeq}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="isPrimaryKey != null"><![CDATA[ AND is_primary_key = #{isPrimaryKey}]]></if>
+		    	<if test="fieldType != null"><![CDATA[ AND field_type = #{fieldType}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="fieldName != null"><![CDATA[field_name = #{fieldName},]]></if>
+		    	<if test="fieldCode != null"><![CDATA[field_code = #{fieldCode},]]></if>
+		    	<if test="isSelected != null"><![CDATA[is_selected = #{isSelected},]]></if>
+		    	<if test="isRequired != null"><![CDATA[is_required = #{isRequired},]]></if>
+		    	<if test="isChecked != null"><![CDATA[is_checked = #{isChecked},]]></if>
+		    	<if test="defaultShownSeq != null"><![CDATA[default_shown_seq = #{defaultShownSeq},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="isPrimaryKey != null"><![CDATA[is_primary_key = #{isPrimaryKey},]]></if>
+		    	<if test="fieldType != null"><![CDATA[field_type = #{fieldType}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DefaultContactTemplate" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO default_contact_template (field_name,field_code,is_selected,is_required,is_checked,default_shown_seq,is_primary_key,field_type)
+			VALUES
+			(
+			  #{fieldName},
+			  #{fieldCode},
+			  #{isSelected},
+			  #{isRequired},
+			  #{isChecked},
+			  #{defaultShownSeq},
+			  #{isPrimaryKey},
+			  #{fieldType}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.DefaultContactTemplate">
+		<![CDATA[UPDATE default_contact_template]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.DefaultContactTemplate" resultType="cn.rongcapital.mkt.po.DefaultContactTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.DefaultContactTemplate" resultType="cn.rongcapital.mkt.po.DefaultContactTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DefaultContactTemplate" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	
+	<!-- 详情见对应dao文件 -->
+	<select id="selectKeyByContactId" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="cn.rongcapital.mkt.po.DefaultContactTemplate">
+		<![CDATA[SELECT]]>
+		<![CDATA[distinct]]>
+		<![CDATA[dct.id as id, dct.field_name as fieldName, dct.field_code as fieldCode, dct.is_selected as isSelected]]>
+		<![CDATA[from default_contact_template dct, contact_template ct]]>
+		<![CDATA[where dct.field_name=ct.field_name ]]>
+		<![CDATA[and dct.field_code=ct.field_code ]]>
+		<![CDATA[and ct.contact_id = #{contactId} ]]>
+		<![CDATA[and ct.required=1]]>
+		<![CDATA[and dct.is_primary_key=1]]>
+	</select>
+
+</mapper>

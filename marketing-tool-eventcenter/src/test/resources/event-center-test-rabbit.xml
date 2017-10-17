@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:int-amqp="http://www.springframework.org/schema/integration/amqp"
+    xmlns:int-stream="http://www.springframework.org/schema/integration/stream"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/tx
+               http://www.springframework.org/schema/tx/spring-tx.xsd
+               http://www.springframework.org/schema/aop
+               http://www.springframework.org/schema/aop/spring-aop.xsd
+               http://www.springframework.org/schema/integration/amqp
+               http://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd
+               http://www.springframework.org/schema/integration/stream
+               http://www.springframework.org/schema/integration/stream/spring-integration-stream.xsd
+               http://www.springframework.org/schema/rabbit
+               http://www.springframework.org/schema/rabbit/spring-rabbit.xsd
+               http://www.springframework.org/schema/integration
+			   http://www.springframework.org/schema/integration/spring-integration.xsd">
+	
+	<context:component-scan base-package="cn.rongcapital.mkt.event.activator"/>
+	
+	<!-- default poller -->
+	<int:poller default="true" fixed-delay="5000"/>
+	
+	<!-- test events-source channel -->
+	<int:channel id="eventsSource">
+		<int:queue/>
+	</int:channel>
+	
+	<!-- events channel -->
+	<int:channel id="events">
+		<int:queue/>
+	</int:channel>
+	
+	<!-- internal events channels -->
+	<int:channel id="systemEvents">
+		<int:queue/>
+	</int:channel>
+	<int:channel id="marketingEvents">
+		<int:queue/>
+	</int:channel>
+	
+	<!-- route by header value -->
+	<int:header-value-router input-channel="events" header-name="eventCenter.eventType" default-output-channel="stdErr">
+		<int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
+		<int:mapping value="SYSTEM" channel="systemEvents"/>
+		<int:mapping value="MARKETING" channel="marketingEvents"/>
+	</int:header-value-router>
+	
+	<!-- process activator -->
+	<int:service-activator ref="systemEventProcessor" method="process" input-channel="systemEvents">
+		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
+	</int:service-activator>
+	<int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents">
+		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/>
+	</int:service-activator>
+	
+	<!-- event dispatcher -->
+	<bean id="eventDispatcherActivator" class="cn.rongcapital.mkt.event.activator.EventDispatcherActivator">
+		<property name="channel" ref="eventsSource"/>
+	</bean>
+	
+	<!-- event processors -->
+	<bean id="systemEventProcessor" class="cn.rongcapital.mkt.event.test.TestSystemEventProcessor"/>
+	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.test.TestMarketingEventProcessor"/>
+	
+	<!-- task executors -->
+	<bean id="routeExecutor" 
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="1"/>
+		<property name="maxPoolSize" value="1"/>
+	</bean>
+	<bean id="processExecutor" 
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="4"/>
+		<property name="maxPoolSize" value="4"/>
+	</bean>
+	
+	<!-- error -->
+	<int-stream:stderr-channel-adapter id="stdErr" append-newline="true" />
+	
+	<!-- rabbit -->
+	<rabbit:connection-factory id="connectionFactory" host="localhost" />
+	<rabbit:template id="amqpTemplate" connection-factory="connectionFactory" />
+	<rabbit:admin connection-factory="connectionFactory" />
+	<rabbit:queue name="test.queue.events" />
+	
+	<!-- AMQP header mapper -->
+	<bean id="customHeaderMapper" class="org.springframework.integration.amqp.support.DefaultAmqpHeaderMapper">
+		<property name="requestHeaderNames" value="eventCenter.eventType"/>
+	</bean>
+	
+	<!-- from source to events -->
+	<int-amqp:outbound-channel-adapter channel="eventsSource" header-mapper="customHeaderMapper"
+		amqp-template="amqpTemplate" exchange-name="test.exchange"
+		routing-key="test.binding" />
+	<rabbit:direct-exchange name="test.exchange">
+		<rabbit:bindings>
+			<rabbit:binding queue="test.queue.events" key="test.binding" />
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+	
+	<!-- from events to router -->
+	<int-amqp:inbound-channel-adapter channel="events" header-mapper="customHeaderMapper"
+		queue-names="test.queue.events" connection-factory="connectionFactory" />
+	
+</beans>

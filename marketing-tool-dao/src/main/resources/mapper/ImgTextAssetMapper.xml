@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.ImgTextAssetDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,name as name,type as type,owner_name as ownerName,pc_preview_url as pcPreviewUrl,mobile_preview_url as mobilePreviewUrl,imgfile_url as imgfileUrl,material_id as materialId,status as status,create_time as createTime,update_time as updateTime,pub_id as pubId,pub_name as pubName,wechat_status as wechatStatus,show_cover_pic as showCoverPic,thumb_ready as thumbReady,wx_type as wxType,digest as digest,imgfile_name as imgfileName,first_asset as firstAsset]]>
+	</sql>
+
+	<!-- 根据owner查询一些列 -->
+	<sql id="QUERY_ASSET_LIST">
+		<![CDATA[ id,name,imgfile_url,type,owner_name,pc_preview_url,mobile_preview_url,create_time,thumb_ready]]>
+	</sql>
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM img_text_asset]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name like CONCAT('%',#{name},'%')]]></if>
+		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="ownerName != null"><![CDATA[ AND owner_name = #{ownerName}]]></if>
+		    	<if test="pcPreviewUrl != null"><![CDATA[ AND pc_preview_url = #{pcPreviewUrl}]]></if>
+		    	<if test="mobilePreviewUrl != null"><![CDATA[ AND mobile_preview_url = #{mobilePreviewUrl}]]></if>
+		    	<if test="imgfileUrl != null"><![CDATA[ AND imgfile_url = #{imgfileUrl}]]></if>
+		    	<if test="materialId != null"><![CDATA[ AND material_id = #{materialId}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		    	<if test="pubName != null"><![CDATA[ AND pub_name = #{pubName}]]></if>
+		    	<if test="wechatStatus != null"><![CDATA[ AND wechat_status = #{wechatStatus}]]></if>
+		    	<if test="showCoverPic != null"><![CDATA[ AND show_cover_pic = #{showCoverPic}]]></if>
+		    	<if test="thumbReady != null"><![CDATA[ AND thumb_ready = #{thumbReady}]]></if>
+		    	<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
+		    	<if test="digest != null"><![CDATA[ AND digest = #{digest}]]></if>
+		    	<if test="imgfileName != null"><![CDATA[ AND imgfile_name = #{imgfileName}]]></if>
+		    	<if test="firstAsset != null"><![CDATA[ AND first_asset = #{firstAsset}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
+		    	<if test="ownerName != null"><![CDATA[owner_name = #{ownerName},]]></if>
+		    	<if test="pcPreviewUrl != null"><![CDATA[pc_preview_url = #{pcPreviewUrl},]]></if>
+		    	<if test="mobilePreviewUrl != null"><![CDATA[mobile_preview_url = #{mobilePreviewUrl},]]></if>
+		    	<if test="imgfileUrl != null"><![CDATA[imgfile_url = #{imgfileUrl},]]></if>
+		    	<if test="materialId != null"><![CDATA[material_id = #{materialId},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="pubId != null"><![CDATA[pub_id = #{pubId},]]></if>
+		    	<if test="pubName != null"><![CDATA[pub_name = #{pubName},]]></if>
+		    	<if test="wechatStatus != null"><![CDATA[wechat_status = #{wechatStatus},]]></if>
+		    	<if test="showCoverPic != null"><![CDATA[show_cover_pic = #{showCoverPic},]]></if>
+		    	<if test="thumbReady != null"><![CDATA[thumb_ready = #{thumbReady},]]></if>
+		    	<if test="wxType != null"><![CDATA[wx_type = #{wxType},]]></if>
+		    	<if test="digest != null"><![CDATA[digest = #{digest},]]></if>
+		    	<if test="imgfileName != null"><![CDATA[imgfile_name = #{imgfileName},]]></if>
+		    	<if test="firstAsset != null"><![CDATA[first_asset = #{firstAsset}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id,create_time,pub_id,pub_name,wechat_status,show_cover_pic,thumb_ready,wx_type,digest,imgfile_name,first_asset)
+			VALUES
+			(
+			  #{name},
+			  #{type},
+			  #{ownerName},
+			  #{pcPreviewUrl},
+			  #{mobilePreviewUrl},
+			  #{imgfileUrl},
+			  #{materialId},
+			  now(),
+			  #{pubId},
+			  #{pubName},
+			  #{wechatStatus},
+			  #{showCoverPic},
+			  #{thumbReady},
+			  #{wxType},
+			  #{digest},
+			  #{imgfileName},
+			  #{firstAsset}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.ImgTextAsset">
+		<![CDATA[UPDATE img_text_asset]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" resultType="cn.rongcapital.mkt.po.ImgTextAsset">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" resultType="cn.rongcapital.mkt.po.ImgTextAsset">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<select id="selectListByName" parameterType="java.util.Map" resultType="java.util.Map">
+        SELECT
+		<include refid="QUERY_ASSET_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE
+		owner_name = #{owner_name} AND status = 0
+		order by create_time desc
+		limit #{index},#{size}
+	</select>
+
+	<select id="selectListByNameAndType" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		<include refid="QUERY_ASSET_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE
+		owner_name = #{owner_name} AND type = #{type} AND status = 0
+		order by create_time desc
+		limit #{index},#{size}
+	</select>
+
+	<select id="selectListAll" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		<include refid="QUERY_ASSET_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = 0
+		order by create_time desc
+		limit #{index},#{size}
+	</select>
+
+	<select id="selectListByType" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		<include refid="QUERY_ASSET_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE type = #{type} AND status = 0
+		order by create_time desc
+		limit #{index},#{size}
+	</select>
+
+	<select id="selectMenuList" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT distinct type ,owner_name
+		<include refid="QUERY_FROM_TABLE"/>
+		where status = #{status}
+	</select>
+
+	<select id="selectImgtextAssetCountByType" resultType="java.util.Map">
+		SELECT type , count(id) as type_count
+		FROM img_text_asset
+		WHERE status = 0
+		GROUP BY type
+	</select>
+
+	<update id="logicDeleteAssetById" parameterType="java.util.Map" >
+		UPDATE img_text_asset
+		SET status = 1
+		WHERE id = #{id}
+	</update>
+
+	<update id="batchUpdateWechatStatusByPubId" parameterType="java.lang.String" >
+		UPDATE img_text_asset
+		SET status = 1
+		WHERE pub_id = #{pub_id}
+	</update>
+
+	<delete id="batchDeleteWechatStatusByPubId" parameterType="java.lang.String" >
+		<![CDATA[delete]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE pub_id = #{pub_id}]]>
+	</delete>
+
+
+	<insert id="batchInsertTuwen" parameterType="java.util.List">
+		INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id)
+		VALUES
+		<foreach collection="list" index="index" item="item" separator=",">
+		(
+			#{item.name},
+		    #{item.type},
+		    #{item.owner_name},
+		    #{item.pc_preview_url},
+		    #{item.mobile_preview_url},
+		    #{item.imgfile_url},
+			#{item.material_id}
+		)
+		</foreach>
+	</insert>
+
+	<insert id="insertHostImg" parameterType="java.util.Map">
+		INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,create_time,material_id)
+		VALUES
+		(
+		#{name},
+		#{type},
+		#{owner_name},
+		#{pc_preview_url},
+		#{mobile_preview_url},
+		#{imgfile_url},
+		#{create_time},
+		#{material_id}
+		)
+	</insert>
+
+	<select id="selectImgtextIdByMaterialId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE material_id = #{material_id}
+		limit 1
+	</select>
+	
+	<!-- 带创建时间和更新时间的插入方法 -->
+	<insert id="insertWithDate" parameterType="cn.rongcapital.mkt.po.ImgTextAsset" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO img_text_asset (name,type,owner_name,pc_preview_url,mobile_preview_url,imgfile_url,material_id,create_time,update_time,pub_id,pub_name,wechat_status,show_cover_pic,thumb_ready,digest,imgfile_name,first_asset)
+			VALUES
+			(
+			  #{name},
+			  #{type},
+			  #{ownerName},
+			  #{pcPreviewUrl},
+			  #{mobilePreviewUrl},
+			  #{imgfileUrl},
+			  #{materialId},
+			  #{createTime},
+			  #{updateTime},
+			  #{pubId},
+			  #{pubName},
+			  #{wechatStatus},
+			  #{showCoverPic},
+			  #{thumbReady},
+			  #{digest},
+			  #{imgfileName},
+			  #{firstAsset}			  
+			)
+		]]>
+	</insert>
+	
+	<!-- 带创建时间和更新时间的更新方法 -->
+	<update id="updateByIdWithDate" parameterType="cn.rongcapital.mkt.po.ImgTextAsset">
+		<![CDATA[UPDATE img_text_asset]]>
+		<set>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="ownerName != null"><![CDATA[owner_name = #{ownerName},]]></if>
+		    	<if test="pcPreviewUrl != null"><![CDATA[pc_preview_url = #{pcPreviewUrl},]]></if>
+		    	<if test="mobilePreviewUrl != null"><![CDATA[mobile_preview_url = #{mobilePreviewUrl},]]></if>
+		    	<if test="imgfileUrl != null"><![CDATA[imgfile_url = #{imgfileUrl},]]></if>
+		    	<if test="materialId != null"><![CDATA[material_id = #{materialId},]]></if>
+		    	<if test="materialId != null"><![CDATA[create_time = #{createTime},]]></if>
+		    	<if test="materialId != null"><![CDATA[update_time = #{updateTime},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="pubId != null"><![CDATA[pub_id = #{pubId},]]></if>
+		    	<if test="pubName != null"><![CDATA[pub_name = #{pubName},]]></if>
+		    	<if test="wechatStatus != null"><![CDATA[wechat_status = #{wechatStatus},]]></if>
+		    	<if test="showCoverPic != null"><![CDATA[show_cover_pic = #{showCoverPic},]]></if>
+		    	<if test="thumbReady != null"><![CDATA[thumb_ready = #{thumbReady},]]></if>
+		    	<if test="digest != null"><![CDATA[digest = #{digest},]]></if>
+		    	<if test="imgfileName != null"><![CDATA[imgfile_name = #{imgfileName},]]></if>
+		    	<if test="firstAsset != null"><![CDATA[first_asset = #{firstAsset},]]></if>		    	
+		</set>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+	
+	<select id="selectListBySearchKeyLike" parameterType="java.util.Map" resultType="java.util.Map">
+
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE 1=1 ]]>
+		<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
+		<if test="searchKey != null"><![CDATA[ AND (owner_name like CONCAT('%',#{searchKey},'%') OR digest like CONCAT('%',#{searchKey},'%') OR name like CONCAT('%',#{searchKey},'%') ) ]]></if>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+	
+	
+	<select id="selectListBySearchKeyLikeCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE 1=1 ]]>
+		<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
+		<if test="searchKey != null"><![CDATA[ AND (owner_name like CONCAT('%',#{searchKey},'%') OR digest like CONCAT('%',#{searchKey},'%') OR name like CONCAT('%',#{searchKey},'%') ) ]]></if>
+	</select>
+
+	<!-- 据pubId type wxType searchKey 查询 media_id -->
+	<select id="selectMaterialIdListBySearchKeyLike" parameterType="cn.rongcapital.mkt.po.ImgTextAsset"
+		resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		material_id
+		<include refid="QUERY_FROM_TABLE" />
+		<![CDATA[WHERE 1=1 ]]>
+		<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
+		<if test="name != null"><![CDATA[ AND (owner_name like CONCAT('%',#{name},'%') OR digest like CONCAT('%',#{name},'%') OR name like CONCAT('%',#{name},'%') ) ]]></if>
+		group by material_id
+		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
+	</select>
+
+	<!-- 根据pubId type wxType searchKey 查询图文信息数量 media_id去重 -->
+	<select id="selectMaterialIdListBySearchKeyLikeCount"
+		parameterType="cn.rongcapital.mkt.po.ImgTextAsset" resultType="java.lang.Integer">
+		<![CDATA[SELECT COUNT(DISTINCT material_id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE" />
+		<![CDATA[WHERE 1=1 ]]>
+		<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
+		<if test="name != null"><![CDATA[ AND (owner_name like CONCAT('%',#{name},'%') OR digest like CONCAT('%',#{name},'%') OR name like CONCAT('%',#{name},'%') ) ]]></if>
+	</select>
+	<!-- 根据pubId type wxType searchKey media_id 查询图文信息 -->
+	<select id="selectListBySearchKey" parameterType="java.lang.String"
+		resultType="java.util.Map">
+		<![CDATA[SELECT]]>
+		owner_name as ownerName, date_format(create_time,'%Y-%m-%d') as
+		createTime,imgfile_url as imgfileUrl,name as name,material_id as
+		materialId,imgfile_name as imgfileName
+		<include refid="QUERY_FROM_TABLE" />
+		<![CDATA[WHERE 1=1 ]]>
+		<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		<if test="wxType != null"><![CDATA[ AND wx_type = #{wxType}]]></if>
+		<if test="name != null"><![CDATA[ AND (owner_name like CONCAT('%',#{name},'%') OR digest like CONCAT('%',#{name},'%') OR name like CONCAT('%',#{name},'%') ) ]]></if>
+		<if test="wxType != null"><![CDATA[ AND material_id = #{materialId}]]></if>
+	</select>
+	
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.SmsTaskTargetAudienceCacheDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,data_party_id as dataPartyId,mobile as mobile,target_id as targetId,status as status,create_time as createTime,update_time as updateTime,target_type as targetType,task_head_id as taskHeadId]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_task_target_audience_cache]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="dataPartyId != null"><![CDATA[ AND data_party_id = #{dataPartyId}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="targetId != null"><![CDATA[ AND target_id = #{targetId}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="targetType != null"><![CDATA[ AND target_type = #{targetType}]]></if>
+		    	<if test="taskHeadId != null"><![CDATA[ AND task_head_id = #{taskHeadId}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="dataPartyId != null"><![CDATA[data_party_id = #{dataPartyId},]]></if>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+		    	<if test="targetId != null"><![CDATA[target_id = #{targetId},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="targetType != null"><![CDATA[target_type = #{targetType},]]></if>
+		    	<if test="taskHeadId != null"><![CDATA[task_head_id = #{taskHeadId}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO sms_task_target_audience_cache (data_party_id,mobile,target_id,create_time,target_type,task_head_id)
+			VALUES
+			(
+			  #{dataPartyId},
+			  #{mobile},
+			  #{targetId},
+			  now(),
+			  #{targetType},
+			  #{taskHeadId}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache">
+		<![CDATA[UPDATE sms_task_target_audience_cache]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache" resultType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+	
+	<!-- 查询,通过手机号和任务IDIN(array) -->
+	<select id="selectListByMobile" parameterType="java.util.Map" resultType="java.lang.Long">
+		<![CDATA[SELECT data_party_id]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE task_head_id = #{taskHeadId}
+		<![CDATA[and mobile IN]]>
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+       		#{item}
+   		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache" resultType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.SmsTaskTargetAudienceCache" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+		INSERT INTO sms_task_target_audience_cache (data_party_id,mobile,target_id,create_time,target_type,task_head_id)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.dataPartyId},
+			#{item.mobile},
+			#{item.targetId},
+			now(),
+			#{item.targetType},
+			#{item.taskHeadId}
+			)
+		</foreach>
+
+	</insert>
+	
+</mapper>

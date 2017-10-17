@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.OriginalDataShoppingDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,channel_type as channelType,channel_id as channelId,channel_name as channelName,pay_type as payType,trans_serial as transSerial,order_no as orderNo,trans_time as transTime,product_id as productId,specification as specification,color as color,discount_type as discountType,discount_amt as discountAmt,price as price,amount as amount,inventory as inventory,brand_id as brandId,brand_name as brandName,class1_id as class1Id,class1_name as class1Name,class2_id as class2Id,class2_name as class2Name,class3_id as class3Id,class3_name as class3Name,class4_id as class4Id,class4_name as class4Name,sale_assist_id as saleAssistId,sale_assistance as saleAssistance,settlement_clerk_id as settlementClerkId,settlement_clerk as settlementClerk,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique,order_status as orderStatus,delivery_way as deliveryWay,logistics_status as logisticsStatus,shipping_fee as shippingFee,shipping_way as shippingWay,express_company as expressCompany,express_order as expressOrder,consignee as consignee,consignee_tel as consigneeTel,consignee_addr as consigneeAddr,buyer_comment as buyerComment,wxmp_id as wxmpId,wx_code as wxCode,product_name as productName,bitmap as bitmap,create_time as createTime]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM original_data_shopping]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="channelType != null"><![CDATA[ AND channel_type = #{channelType}]]></if>
+		    	<if test="channelId != null"><![CDATA[ AND channel_id = #{channelId}]]></if>
+		    	<if test="channelName != null"><![CDATA[ AND channel_name = #{channelName}]]></if>
+		    	<if test="payType != null"><![CDATA[ AND pay_type = #{payType}]]></if>
+		    	<if test="transSerial != null"><![CDATA[ AND trans_serial = #{transSerial}]]></if>
+		    	<if test="orderNo != null"><![CDATA[ AND order_no = #{orderNo}]]></if>
+		    	<if test="transTime != null"><![CDATA[ AND trans_time = #{transTime}]]></if>
+		    	<if test="productId != null"><![CDATA[ AND product_id = #{productId}]]></if>
+		    	<if test="specification != null"><![CDATA[ AND specification = #{specification}]]></if>
+		    	<if test="color != null"><![CDATA[ AND color = #{color}]]></if>
+		    	<if test="discountType != null"><![CDATA[ AND discount_type = #{discountType}]]></if>
+		    	<if test="discountAmt != null"><![CDATA[ AND discount_amt = #{discountAmt}]]></if>
+		    	<if test="price != null"><![CDATA[ AND price = #{price}]]></if>
+		    	<if test="amount != null"><![CDATA[ AND amount = #{amount}]]></if>
+		    	<if test="inventory != null"><![CDATA[ AND inventory = #{inventory}]]></if>
+		    	<if test="brandId != null"><![CDATA[ AND brand_id = #{brandId}]]></if>
+		    	<if test="brandName != null"><![CDATA[ AND brand_name = #{brandName}]]></if>
+		    	<if test="class1Id != null"><![CDATA[ AND class1_id = #{class1Id}]]></if>
+		    	<if test="class1Name != null"><![CDATA[ AND class1_name = #{class1Name}]]></if>
+		    	<if test="class2Id != null"><![CDATA[ AND class2_id = #{class2Id}]]></if>
+		    	<if test="class2Name != null"><![CDATA[ AND class2_name = #{class2Name}]]></if>
+		    	<if test="class3Id != null"><![CDATA[ AND class3_id = #{class3Id}]]></if>
+		    	<if test="class3Name != null"><![CDATA[ AND class3_name = #{class3Name}]]></if>
+		    	<if test="class4Id != null"><![CDATA[ AND class4_id = #{class4Id}]]></if>
+		    	<if test="class4Name != null"><![CDATA[ AND class4_name = #{class4Name}]]></if>
+		    	<if test="saleAssistId != null"><![CDATA[ AND sale_assist_id = #{saleAssistId}]]></if>
+		    	<if test="saleAssistance != null"><![CDATA[ AND sale_assistance = #{saleAssistance}]]></if>
+		    	<if test="settlementClerkId != null"><![CDATA[ AND settlement_clerk_id = #{settlementClerkId}]]></if>
+		    	<if test="settlementClerk != null"><![CDATA[ AND settlement_clerk = #{settlementClerk}]]></if>
+		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
+		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
+		    	<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
+		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="fileUnique != null"><![CDATA[ AND file_unique = #{fileUnique}]]></if>
+		    	<if test="orderStatus != null"><![CDATA[ AND order_status = #{orderStatus}]]></if>
+		    	<if test="deliveryWay != null"><![CDATA[ AND delivery_way = #{deliveryWay}]]></if>
+		    	<if test="logisticsStatus != null"><![CDATA[ AND logistics_status = #{logisticsStatus}]]></if>
+		    	<if test="shippingFee != null"><![CDATA[ AND shipping_fee = #{shippingFee}]]></if>
+		    	<if test="shippingWay != null"><![CDATA[ AND shipping_way = #{shippingWay}]]></if>
+		    	<if test="expressCompany != null"><![CDATA[ AND express_company = #{expressCompany}]]></if>
+		    	<if test="expressOrder != null"><![CDATA[ AND express_order = #{expressOrder}]]></if>
+		    	<if test="consignee != null"><![CDATA[ AND consignee = #{consignee}]]></if>
+		    	<if test="consigneeTel != null"><![CDATA[ AND consignee_tel = #{consigneeTel}]]></if>
+		    	<if test="consigneeAddr != null"><![CDATA[ AND consignee_addr = #{consigneeAddr}]]></if>
+		    	<if test="buyerComment != null"><![CDATA[ AND buyer_comment = #{buyerComment}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
+		    	<if test="productName != null"><![CDATA[ AND product_name = #{productName}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="channelType != null"><![CDATA[channel_type = #{channelType},]]></if>
+		    	<if test="channelId != null"><![CDATA[channel_id = #{channelId},]]></if>
+		    	<if test="channelName != null"><![CDATA[channel_name = #{channelName},]]></if>
+		    	<if test="payType != null"><![CDATA[pay_type = #{payType},]]></if>
+		    	<if test="transSerial != null"><![CDATA[trans_serial = #{transSerial},]]></if>
+		    	<if test="orderNo != null"><![CDATA[order_no = #{orderNo},]]></if>
+		    	<if test="transTime != null"><![CDATA[trans_time = #{transTime},]]></if>
+		    	<if test="productId != null"><![CDATA[product_id = #{productId},]]></if>
+		    	<if test="specification != null"><![CDATA[specification = #{specification},]]></if>
+		    	<if test="color != null"><![CDATA[color = #{color},]]></if>
+		    	<if test="discountType != null"><![CDATA[discount_type = #{discountType},]]></if>
+		    	<if test="discountAmt != null"><![CDATA[discount_amt = #{discountAmt},]]></if>
+		    	<if test="price != null"><![CDATA[price = #{price},]]></if>
+		    	<if test="amount != null"><![CDATA[amount = #{amount},]]></if>
+		    	<if test="inventory != null"><![CDATA[inventory = #{inventory},]]></if>
+		    	<if test="brandId != null"><![CDATA[brand_id = #{brandId},]]></if>
+		    	<if test="brandName != null"><![CDATA[brand_name = #{brandName},]]></if>
+		    	<if test="class1Id != null"><![CDATA[class1_id = #{class1Id},]]></if>
+		    	<if test="class1Name != null"><![CDATA[class1_name = #{class1Name},]]></if>
+		    	<if test="class2Id != null"><![CDATA[class2_id = #{class2Id},]]></if>
+		    	<if test="class2Name != null"><![CDATA[class2_name = #{class2Name},]]></if>
+		    	<if test="class3Id != null"><![CDATA[class3_id = #{class3Id},]]></if>
+		    	<if test="class3Name != null"><![CDATA[class3_name = #{class3Name},]]></if>
+		    	<if test="class4Id != null"><![CDATA[class4_id = #{class4Id},]]></if>
+		    	<if test="class4Name != null"><![CDATA[class4_name = #{class4Name},]]></if>
+		    	<if test="saleAssistId != null"><![CDATA[sale_assist_id = #{saleAssistId},]]></if>
+		    	<if test="saleAssistance != null"><![CDATA[sale_assistance = #{saleAssistance},]]></if>
+		    	<if test="settlementClerkId != null"><![CDATA[settlement_clerk_id = #{settlementClerkId},]]></if>
+		    	<if test="settlementClerk != null"><![CDATA[settlement_clerk = #{settlementClerk},]]></if>
+		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
+		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
+		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
+		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+		    	<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
+		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique},]]></if>
+		    	<if test="orderStatus != null"><![CDATA[order_status = #{orderStatus},]]></if>
+		    	<if test="deliveryWay != null"><![CDATA[delivery_way = #{deliveryWay},]]></if>
+		    	<if test="logisticsStatus != null"><![CDATA[logistics_status = #{logisticsStatus},]]></if>
+		    	<if test="shippingFee != null"><![CDATA[shipping_fee = #{shippingFee},]]></if>
+		    	<if test="shippingWay != null"><![CDATA[shipping_way = #{shippingWay},]]></if>
+		    	<if test="expressCompany != null"><![CDATA[express_company = #{expressCompany},]]></if>
+		    	<if test="expressOrder != null"><![CDATA[express_order = #{expressOrder},]]></if>
+		    	<if test="consignee != null"><![CDATA[consignee = #{consignee},]]></if>
+		    	<if test="consigneeTel != null"><![CDATA[consignee_tel = #{consigneeTel},]]></if>
+		    	<if test="consigneeAddr != null"><![CDATA[consignee_addr = #{consigneeAddr},]]></if>
+		    	<if test="buyerComment != null"><![CDATA[buyer_comment = #{buyerComment},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode},]]></if>
+		    	<if test="productName != null"><![CDATA[product_name = #{productName},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataShopping" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO original_data_shopping (channel_type,channel_id,channel_name,pay_type,trans_serial,order_no,trans_time,product_id,specification,color,discount_type,discount_amt,price,amount,inventory,brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,source,batch_id,file_unique,order_status,delivery_way,logistics_status,shipping_fee,shipping_way,express_company,express_order,consignee,consignee_tel,consignee_addr,buyer_comment,wxmp_id,wx_code,product_name,bitmap,create_time)
+			VALUES
+			(
+			  #{channelType},
+			  #{channelId},
+			  #{channelName},
+			  #{payType},
+			  #{transSerial},
+			  #{orderNo},
+			  #{transTime},
+			  #{productId},
+			  #{specification},
+			  #{color},
+			  #{discountType},
+			  #{discountAmt},
+			  #{price},
+			  #{amount},
+			  #{inventory},
+			  #{brandId},
+			  #{brandName},
+			  #{class1Id},
+			  #{class1Name},
+			  #{class2Id},
+			  #{class2Name},
+			  #{class3Id},
+			  #{class3Name},
+			  #{class4Id},
+			  #{class4Name},
+			  #{saleAssistId},
+			  #{saleAssistance},
+			  #{settlementClerkId},
+			  #{settlementClerk},
+			  #{identifyNo},
+			  #{drivingLicense},
+			  #{email},
+			  #{mobile},
+			  #{tel},
+			  #{qq},
+			  #{acctType},
+			  #{acctNo},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
+			  #{phoneMac},
+			  #{source},
+			  #{batchId},
+			  #{fileUnique},
+			  #{orderStatus},
+			  #{deliveryWay},
+			  #{logisticsStatus},
+			  #{shippingFee},
+			  #{shippingWay},
+			  #{expressCompany},
+			  #{expressOrder},
+			  #{consignee},
+			  #{consigneeTel},
+			  #{consigneeAddr},
+			  #{buyerComment},
+			  #{wxmpId},
+			  #{wxCode},
+			  #{productName},
+			  #{bitmap},
+			  now()
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.OriginalDataShopping">
+		<![CDATA[UPDATE original_data_shopping]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.OriginalDataShopping" resultType="cn.rongcapital.mkt.po.OriginalDataShopping">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.OriginalDataShopping" resultType="cn.rongcapital.mkt.po.OriginalDataShopping">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.OriginalDataShopping" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO original_data_shopping (channel_type,channel_id,channel_name,pay_type,
+            trans_serial,order_no,trans_time,product_id,specification,color,discount_type,
+            discount_amt,price,amount,inventory,brand_id,brand_name,class1_id,
+            class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,
+            sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,
+            identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,
+            udid,phone_mac,status,source,file_unique,batch_id,order_status,delivery_way,
+		    logistics_status,shipping_fee,shipping_way,express_company,express_order,consignee,
+		    consignee_tel,consignee_addr,buyer_comment,wxmp_id,wx_code,product_name,create_time,bitmap)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.channel_type},
+			#{item.channel_id},
+			#{item.channel_name},
+			#{item.pay_type},
+			#{item.trans_serial},
+			#{item.order_no},
+			#{item.trans_time,jdbcType=TIMESTAMP},
+			#{item.product_id},
+			#{item.specification},
+			#{item.color},
+			#{item.discount_type},
+			#{item.discount_amt},
+			#{item.price},
+			#{item.amount},
+			#{item.inventory},
+			#{item.brand_id},
+			#{item.brand_name},
+			#{item.class1_id},
+			#{item.class1_name},
+			#{item.class2_id},
+			#{item.class2_name},
+			#{item.class3_id},
+			#{item.class3_name},
+			#{item.class4_id},
+			#{item.class4_name},
+			#{item.sale_assist_id},
+			#{item.sale_assistance},
+			#{item.settlement_clerk_id},
+			#{item.settlement_clerk},
+			#{item.identify_no},
+			#{item.driving_license},
+			#{item.email},
+			#{item.mobile},
+			#{item.tel},
+			#{item.qq},
+			#{item.acct_type},
+			#{item.acct_no},
+			#{item.idfa},
+			#{item.imei},
+			#{item.udid},
+			#{item.phone_mac},
+            #{item.status},
+			#{item.source},
+			#{item.file_unique},
+			#{item.batch_id},
+			#{item.order_status},
+			#{item.delivery_way},
+			#{item.logistics_status},
+			#{item.shipping_fee},
+			#{item.shipping_way},
+			#{item.express_company},
+			#{item.express_order},
+			#{item.consignee},
+			#{item.consignee_tel},
+			#{item.consignee_addr},
+			#{item.buyer_comment},
+			#{item.wxmp_id},
+			#{item.wx_code},
+			#{item.product_name},
+			now(),
+			#{item.bitmap}
+			)
+		</foreach>
+	</insert>
+
+	<select id="selelctIdListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE file_unique = #{file_unique}
+	</select>
+
+	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE file_unique = #{file_unique}
+	</select>
+
+	<update id="updateStatusByFileUnique">
+		update original_data_shopping set status = #{status} where file_unique = #{fileUnique}
+	</update>
+</mapper>

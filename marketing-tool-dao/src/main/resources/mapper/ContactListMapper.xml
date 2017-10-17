@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.ContactListDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,monthly_consume as monthlyConsume,marital_status as maritalStatus,education as education,employment as employment,nationality as nationality,blood_type as bloodType,citizenship as citizenship,iq as iq,identify_no as identifyNo,driving_license as drivingLicense,email as email,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid,wxmp_id as wxmpId,wx_code as wxCode,nickname as nickname,head_img_url as headImgUrl,subscribe_time as subscribeTime,language as language,unionid as unionid,remark as remark,commit_time as commitTime,fill_device as fillDevice,OS as oS,brower as brower,IP as iP,wx_nickname as wxNickname,wx_gender as wxGender,wx_openid as wxOpenid,wx_header_url as wxHeaderUrl,wx_country as wxCountry,wx_city as wxCity,contact_templ_id as contactTemplId,age as age,address as address,download_url as downloadUrl]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM contact_list]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="gender != null"><![CDATA[ AND gender = #{gender}]]></if>
+		    	<if test="birthday != null"><![CDATA[ AND birthday = #{birthday}]]></if>
+		    	<if test="provice != null"><![CDATA[ AND provice = #{provice}]]></if>
+		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
+		    	<if test="job != null"><![CDATA[ AND job = #{job}]]></if>
+		    	<if test="monthlyIncome != null"><![CDATA[ AND monthly_income = #{monthlyIncome}]]></if>
+		    	<if test="monthlyConsume != null"><![CDATA[ AND monthly_consume = #{monthlyConsume}]]></if>
+		    	<if test="maritalStatus != null"><![CDATA[ AND marital_status = #{maritalStatus}]]></if>
+		    	<if test="education != null"><![CDATA[ AND education = #{education}]]></if>
+		    	<if test="employment != null"><![CDATA[ AND employment = #{employment}]]></if>
+		    	<if test="nationality != null"><![CDATA[ AND nationality = #{nationality}]]></if>
+		    	<if test="bloodType != null"><![CDATA[ AND blood_type = #{bloodType}]]></if>
+		    	<if test="citizenship != null"><![CDATA[ AND citizenship = #{citizenship}]]></if>
+		    	<if test="iq != null"><![CDATA[ AND iq = #{iq}]]></if>
+		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
+		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
+		    	<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
+		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
+		    	<if test="nickname != null"><![CDATA[ AND nickname = #{nickname}]]></if>
+		    	<if test="headImgUrl != null"><![CDATA[ AND head_img_url = #{headImgUrl}]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[ AND subscribe_time = #{subscribeTime}]]></if>
+		    	<if test="language != null"><![CDATA[ AND language = #{language}]]></if>
+		    	<if test="unionid != null"><![CDATA[ AND unionid = #{unionid}]]></if>
+		    	<if test="remark != null"><![CDATA[ AND remark = #{remark}]]></if>
+		    	<if test="commitTime != null"><![CDATA[ AND commit_time = #{commitTime}]]></if>
+		    	<if test="fillDevice != null"><![CDATA[ AND fill_device = #{fillDevice}]]></if>
+		    	<if test="os != null"><![CDATA[ AND OS = #{os}]]></if>
+		    	<if test="brower != null"><![CDATA[ AND brower = #{brower}]]></if>
+		    	<if test="ip != null"><![CDATA[ AND IP = #{ip}]]></if>
+		    	<if test="wxNickname != null"><![CDATA[ AND wx_nickname = #{wxNickname}]]></if>
+		    	<if test="wxGender != null"><![CDATA[ AND wx_gender = #{wxGender}]]></if>
+		    	<if test="wxOpenid != null"><![CDATA[ AND wx_openid = #{wxOpenid}]]></if>
+		    	<if test="wxHeaderUrl != null"><![CDATA[ AND wx_header_url = #{wxHeaderUrl}]]></if>
+		    	<if test="wxCountry != null"><![CDATA[ AND wx_country = #{wxCountry}]]></if>
+		    	<if test="wxCity != null"><![CDATA[ AND wx_city = #{wxCity}]]></if>
+		    	<if test="contactTemplId != null"><![CDATA[ AND contact_templ_id = #{contactTemplId}]]></if>
+		    	<if test="age != null"><![CDATA[ AND age = #{age}]]></if>
+		    	<if test="address != null"><![CDATA[ AND address = #{address}]]></if>
+		    	<if test="downloadUrl != null"><![CDATA[ AND download_url = #{downloadUrl}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="gender != null"><![CDATA[gender = #{gender},]]></if>
+		    	<if test="birthday != null"><![CDATA[birthday = #{birthday},]]></if>
+		    	<if test="provice != null"><![CDATA[provice = #{provice},]]></if>
+		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
+		    	<if test="job != null"><![CDATA[job = #{job},]]></if>
+		    	<if test="monthlyIncome != null"><![CDATA[monthly_income = #{monthlyIncome},]]></if>
+		    	<if test="monthlyConsume != null"><![CDATA[monthly_consume = #{monthlyConsume},]]></if>
+		    	<if test="maritalStatus != null"><![CDATA[marital_status = #{maritalStatus},]]></if>
+		    	<if test="education != null"><![CDATA[education = #{education},]]></if>
+		    	<if test="employment != null"><![CDATA[employment = #{employment},]]></if>
+		    	<if test="nationality != null"><![CDATA[nationality = #{nationality},]]></if>
+		    	<if test="bloodType != null"><![CDATA[blood_type = #{bloodType},]]></if>
+		    	<if test="citizenship != null"><![CDATA[citizenship = #{citizenship},]]></if>
+		    	<if test="iq != null"><![CDATA[iq = #{iq},]]></if>
+		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
+		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
+		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
+		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
+		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+		    	<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
+		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode},]]></if>
+		    	<if test="nickname != null"><![CDATA[nickname = #{nickname},]]></if>
+		    	<if test="headImgUrl != null"><![CDATA[head_img_url = #{headImgUrl},]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[subscribe_time = #{subscribeTime},]]></if>
+		    	<if test="language != null"><![CDATA[language = #{language},]]></if>
+		    	<if test="unionid != null"><![CDATA[unionid = #{unionid},]]></if>
+		    	<if test="remark != null"><![CDATA[remark = #{remark},]]></if>
+		    	<if test="commitTime != null"><![CDATA[commit_time = #{commitTime},]]></if>
+		    	<if test="fillDevice != null"><![CDATA[fill_device = #{fillDevice},]]></if>
+		    	<if test="os != null"><![CDATA[OS = #{os},]]></if>
+		    	<if test="brower != null"><![CDATA[brower = #{brower},]]></if>
+		    	<if test="ip != null"><![CDATA[IP = #{ip},]]></if>
+		    	<if test="wxNickname != null"><![CDATA[wx_nickname = #{wxNickname},]]></if>
+		    	<if test="wxGender != null"><![CDATA[wx_gender = #{wxGender},]]></if>
+		    	<if test="wxOpenid != null"><![CDATA[wx_openid = #{wxOpenid},]]></if>
+		    	<if test="wxHeaderUrl != null"><![CDATA[wx_header_url = #{wxHeaderUrl},]]></if>
+		    	<if test="wxCountry != null"><![CDATA[wx_country = #{wxCountry},]]></if>
+		    	<if test="wxCity != null"><![CDATA[wx_city = #{wxCity},]]></if>
+		    	<if test="contactTemplId != null"><![CDATA[contact_templ_id = #{contactTemplId},]]></if>
+		    	<if test="age != null"><![CDATA[age = #{age},]]></if>
+		    	<if test="address != null"><![CDATA[address = #{address},]]></if>
+		    	<if test="downloadUrl != null"><![CDATA[download_url = #{downloadUrl}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ContactList" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO contact_list (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code,nickname,head_img_url,subscribe_time,language,unionid,remark,commit_time,fill_device,OS,brower,IP,wx_nickname,wx_gender,wx_openid,wx_header_url,wx_country,wx_city,contact_templ_id,age,address,download_url)
+			VALUES
+			(
+			  #{mobile},
+			  #{name},
+			  #{gender},
+			  #{birthday},
+			  #{provice},
+			  #{city},
+			  #{job},
+			  #{monthlyIncome},
+			  #{monthlyConsume},
+			  #{maritalStatus},
+			  #{education},
+			  #{employment},
+			  #{nationality},
+			  #{bloodType},
+			  #{citizenship},
+			  #{iq},
+			  #{identifyNo},
+			  #{drivingLicense},
+			  #{email},
+			  #{tel},
+			  #{qq},
+			  #{acctType},
+			  #{acctNo},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
+			  #{phoneMac},
+			  now(),
+			  #{source},
+			  #{batchId},
+			  #{bitmap},
+			  #{keyid},
+			  #{wxmpId},
+			  #{wxCode},
+			  #{nickname},
+			  #{headImgUrl},
+			  #{subscribeTime},
+			  #{language},
+			  #{unionid},
+			  #{remark},
+			  #{commitTime},
+			  #{fillDevice},
+			  #{os},
+			  #{brower},
+			  #{ip},
+			  #{wxNickname},
+			  #{wxGender},
+			  #{wxOpenid},
+			  #{wxHeaderUrl},
+			  #{wxCountry},
+			  #{wxCity},
+			  #{contactTemplId},
+			  #{age},
+			  #{address},
+			  #{downloadUrl}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.ContactList">
+		<![CDATA[UPDATE contact_list]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.ContactList" resultType="cn.rongcapital.mkt.po.ContactList">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.ContactList" resultType="cn.rongcapital.mkt.po.ContactList">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.ContactList" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<select id="selectDistinctKeyidList" parameterType="cn.rongcapital.mkt.po.ContactList" resultType="java.lang.Integer">
+		SELECT distinct keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = #{status}
+		AND contact_templ_id = #{contactTemplId}
+	</select>
+
+	<select id="selectTodayCommitCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(id)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE create_time BETWEEN #{startTime} AND #{endTime}
+		AND contact_templ_id = #{contactTemplId}
+	</select>
+	
+	<update id="updateByContactId" parameterType="cn.rongcapital.mkt.po.ContactList">
+		<![CDATA[UPDATE contact_list]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE 1 = 1]]>
+		<if test="contactTemplId != null"><![CDATA[and contact_templ_id = #{contactTemplId}]]></if>
+		<if  test="id != null"><![CDATA[and id = #{id}]]></if>
+	</update>
+
+	<select id="selectListByContactIdAndCommitTime" parameterType="cn.rongcapital.mkt.po.ContactList" resultType="cn.rongcapital.mkt.po.ContactList">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE 1 = 1 AND status != 3]]>
+		<if test="contactTemplId != null"><![CDATA[and contact_templ_id = #{contactTemplId}]]></if>
+		<if test="startTime != null and endTime != null"><![CDATA[and commit_time BETWEEN #{startTime} AND #{endTime}]]></if>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+</mapper>

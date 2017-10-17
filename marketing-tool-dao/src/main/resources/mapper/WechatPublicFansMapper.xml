@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.WechatPublicFansDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id,pub_id,pub_name,name,nickname,sex,country,province,city,county,birtday,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,group_ids]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM wechat_public_fans]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		    	<if test="pubName != null"><![CDATA[ AND pub_name = #{pubName}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="nickname != null"><![CDATA[ AND nickname = #{nickname}]]></if>
+		    	<if test="sex != null"><![CDATA[ AND sex = #{sex}]]></if>
+		    	<if test="country != null"><![CDATA[ AND country = #{country}]]></if>
+		    	<if test="province != null"><![CDATA[ AND province = #{province}]]></if>
+		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
+		    	<if test="county != null"><![CDATA[ AND county = #{county}]]></if>
+		    	<if test="birtday != null"><![CDATA[ AND birtday = #{birtday}]]></if>
+		    	<if test="subscribeYn != null"><![CDATA[ AND subscribe_yn = #{subscribeYn}]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[ AND subscribe_time = #{subscribeTime}]]></if>
+		    	<if test="activeTime != null"><![CDATA[ AND active_time = #{activeTime}]]></if>
+		    	<if test="activity48hYn != null"><![CDATA[ AND activity_48h_yn = #{activity48hYn}]]></if>
+		    	<if test="headImageUrl != null"><![CDATA[ AND head_image_url = #{headImageUrl}]]></if>
+		    	<if test="remark != null"><![CDATA[ AND remark = #{remark}]]></if>
+		    	<if test="groupIds != null"><![CDATA[ AND group_ids = #{groupIds}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="pubId != null"><![CDATA[pub_id = #{pubId},]]></if>
+		    	<if test="pubName != null"><![CDATA[pub_name = #{pubName},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="nickname != null"><![CDATA[nickname = #{nickname},]]></if>
+		    	<if test="sex != null"><![CDATA[sex = #{sex},]]></if>
+		    	<if test="country != null"><![CDATA[country = #{country},]]></if>
+		    	<if test="province != null"><![CDATA[province = #{province},]]></if>
+		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
+		    	<if test="county != null"><![CDATA[county = #{county},]]></if>
+		    	<if test="birtday != null"><![CDATA[birtday = #{birtday},]]></if>
+		    	<if test="subscribeYn != null"><![CDATA[subscribe_yn = #{subscribeYn},]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[subscribe_time = #{subscribeTime},]]></if>
+		    	<if test="activeTime != null"><![CDATA[active_time = #{activeTime},]]></if>
+		    	<if test="activity48hYn != null"><![CDATA[activity_48h_yn = #{activity48hYn},]]></if>
+		    	<if test="headImageUrl != null"><![CDATA[head_image_url = #{headImageUrl},]]></if>
+		    	<if test="remark != null"><![CDATA[remark = #{remark},]]></if>
+		    	<if test="groupIds != null"><![CDATA[group_ids = #{groupIds},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatPublicFans" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO wechat_public_fans (pub_id,pub_name,name,nickname,sex,country,province,city,county,birtday,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,group_ids,create_time)
+			VALUES
+			(
+			  #{pubId},
+			  #{pubName},
+			  #{name},
+			  #{nickname},
+			  #{sex},
+			  #{country},
+			  #{province},
+			  #{city},
+			  #{county},
+			  #{birtday},
+			  #{subscribeYn},
+			  #{subscribeTime},
+			  #{activeTime},
+			  #{activity48hYn},
+			  #{headImageUrl},
+			  #{remark},
+			  #{groupIds},
+			  now()
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.WechatPublicFans">
+		<![CDATA[UPDATE wechat_public_fans]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.WechatPublicFans" resultType="cn.rongcapital.mkt.po.WechatPublicFans">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.WechatPublicFans" resultType="cn.rongcapital.mkt.po.WechatPublicFans">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.WechatPublicFans" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	
+	
+</mapper>

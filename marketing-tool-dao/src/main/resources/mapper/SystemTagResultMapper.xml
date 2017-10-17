@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.SystemTagResultDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ keyid as keyId,tag_value as tag_value]]>
+	</sql>
+
+	<!-- 其它SQL语句 -->
+	<select id="selectListByMap" parameterType="java.lang.String"
+		resultType="cn.rongcapital.mkt.po.SystemTagResult">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST" />
+		<![CDATA[FROM ${tagView}]]>
+	</select>
+
+</mapper>

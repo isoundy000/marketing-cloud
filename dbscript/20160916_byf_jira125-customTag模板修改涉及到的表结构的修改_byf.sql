@@ -1,0 +1,93 @@
+-- 根据Jira MCPRO-125修改客户标签模板(修改original_data_custom表结构，data_custom表结构，import_template的数据)
+DROP TABLE IF EXISTS `original_data_customer_tags`;
+
+CREATE TABLE `original_data_customer_tags` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `tag_source` varchar(45) DEFAULT NULL COMMENT '标签来源',
+  `tag_type_layer_one` varchar(100) DEFAULT NULL COMMENT '一级标签分类', 
+  `tag_type_layer_two` varchar(100) DEFAULT NULL COMMENT '二级标签分类', 
+  `tag_type_layer_three` varchar(100) DEFAULT NULL COMMENT '三级标签分类', 
+  `tag_name` varchar(100) DEFAULT NULL COMMENT '标签名称',
+  `identify_no` varchar(19) DEFAULT NULL COMMENT '身份证号',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT '驾驶证号',
+  `email` varchar(100) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL COMMENT '手机号',
+  `tel` varchar(45) DEFAULT NULL COMMENT '固话号码',
+  `qq` varchar(45) DEFAULT NULL,
+  `acct_type` varchar(45) DEFAULT NULL COMMENT '私有账号类型',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT '私有账号',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphone手机识别码',
+  `imei` varchar(45) DEFAULT NULL COMMENT '手机识别码',
+  `unionid` varchar(45) DEFAULT NULL,
+  `wxmp_id` varchar(128) DEFAULT NULL COMMENT '公众号标识',
+  `wx_code` varchar(128) DEFAULT NULL COMMENT 'openId',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT '手机网卡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除标记',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '删除时间',
+  `source` varchar(45) DEFAULT NULL COMMENT '数据来源',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT '数据导入批次iD',
+  `file_unique` varchar(45) DEFAULT NULL,
+  `bitmap` varchar(18) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `data_customer_tags`;
+
+CREATE TABLE `data_customer_tags` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `tag_source` varchar(45) DEFAULT NULL COMMENT '标签来源',
+  `tag_type_layer_one` varchar(100) DEFAULT NULL COMMENT '一级标签分类', 
+  `tag_type_layer_two` varchar(100) DEFAULT NULL COMMENT '二级标签分类', 
+  `tag_type_layer_three` varchar(100) DEFAULT NULL COMMENT '三级标签分类', 
+  `tag_name` varchar(45) DEFAULT NULL COMMENT '标签名称',
+  `identify_no` varchar(19) DEFAULT NULL COMMENT '身份证号',
+  `driving_license` varchar(45) DEFAULT NULL COMMENT '驾驶证号',
+  `email` varchar(100) DEFAULT NULL,
+  `mobile` varchar(20) DEFAULT NULL COMMENT '手机号',
+  `tel` varchar(45) DEFAULT NULL COMMENT '固话号码',
+  `qq` varchar(45) DEFAULT NULL,
+  `acct_type` varchar(45) DEFAULT NULL COMMENT '私有账号类型',
+  `acct_no` varchar(45) DEFAULT NULL COMMENT '私有账号',
+  `idfa` varchar(45) DEFAULT NULL COMMENT 'iphone手机识别码',
+  `imei` varchar(45) DEFAULT NULL COMMENT '手机识别码',
+  `unionid` varchar(45) DEFAULT NULL,
+  `wxmp_id` varchar(128) DEFAULT NULL COMMENT '公众号标识',
+  `wx_code` varchar(128) DEFAULT NULL COMMENT '微信openid',
+  `phone_mac` varchar(45) DEFAULT NULL COMMENT '手机网卡MAC',
+  `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '删除标记',
+  `create_time` datetime DEFAULT NULL,
+  `update_time` timestamp NOT NULL DEFAULT '1970-07-01 00:00:00' COMMENT '删除时间',
+  `source` varchar(45) DEFAULT NULL COMMENT '数据来源',
+  `batch_id` varchar(45) DEFAULT NULL COMMENT '数据导入批次iD',
+  `bitmap` varchar(18) DEFAULT NULL,
+  `keyid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='客户标签';
+
+DELETE FROM import_template WHERE templ_type = 2;
+
+INSERT INTO `import_template`(templ_type,templ_name,field_name,field_code,selected,status) VALUES 
+(2,'客户标签','标签来源','tag_source',1,0),
+(2,'客户标签','一级标签分类','tag_type_layer_one',1,0),
+(2,'客户标签','二级标签分类','tag_type_layer_two',1,0),
+(2,'客户标签','三级标签分类','tag_type_layer_three',1,0),
+(2,'客户标签','标签名称','tag_name',1,0),
+(2,'客户标签','身份证号','identify_no',0,0),
+(2,'客户标签','驾驶证号','driving_license',1,0),
+(2,'客户标签','邮箱','email',1,0),
+(2,'客户标签','手机号','mobile',1,0),
+(2,'客户标签','固话号码','tel',0,0),
+(2,'客户标签','QQ','qq',0,0),
+(2,'客户标签','私有账号类型','acct_type',0,0),
+(2,'客户标签','私有账号','acct_no',0,0),
+(2,'客户标签','IDFA','idfa',0,0),
+(2,'客户标签','IMEI','imei',0,0),
+(2,'客户标签','unionid','unionid',0,0),
+(2,'客户标签','MAC','phone_mac',0,0),
+(2,'客户标签','删除标记','status',0,0),
+(2,'客户标签','公众号标识','wxmp_id',0,0),
+(2,'客户标签','openid','wx_code',0,0),
+(2,'客户标签','产生时间','create_time',0,0),
+(2,'客户标签','删除时间','update_time',0,0),
+(2,'客户标签','数据来源','source',0,0);

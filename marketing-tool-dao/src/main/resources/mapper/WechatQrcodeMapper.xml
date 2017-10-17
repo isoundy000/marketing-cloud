@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.WechatQrcodeDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,wx_name as wxName,wx_acct as wxAcct,ch_code as chCode,is_audience as isAudience,audience_name as audienceName,related_tags as relatedTags,comments as comments,create_time as createTime,expiration_time as expirationTime,status as status,qrcode_pic as qrcodePic,qrcode_url as qrcodeUrl,batch_id as batchId,ticket as ticket,qrcode_name as qrcodeName,authorization as authorization]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM wechat_qrcode]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
+		    	<if test="chCode != null"><![CDATA[ AND ch_code = #{chCode}]]></if>
+		    	<if test="isAudience != null"><![CDATA[ AND is_audience = #{isAudience}]]></if>
+		    	<if test="audienceName != null"><![CDATA[ AND audience_name = #{audienceName}]]></if>
+		    	<if test="relatedTags != null"><![CDATA[ AND related_tags = #{relatedTags}]]></if>
+		    	<if test="comments != null"><![CDATA[ AND comments = #{comments}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="expirationTime != null"><![CDATA[ AND expiration_time = #{expirationTime}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="qrcodePic != null"><![CDATA[ AND qrcode_pic = #{qrcodePic}]]></if>
+		    	<if test="qrcodeUrl != null"><![CDATA[ AND qrcode_url = #{qrcodeUrl}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="ticket != null"><![CDATA[ AND ticket = #{ticket}]]></if>
+		    	<if test="qrcodeName != null"><![CDATA[ AND qrcode_name = #{qrcodeName}]]></if>
+		    	<if test="authorization != null"><![CDATA[ AND authorization = #{authorization}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="wxName != null"><![CDATA[wx_name = #{wxName},]]></if>
+		    	<if test="wxAcct != null"><![CDATA[wx_acct = #{wxAcct},]]></if>
+		    	<if test="chCode != null"><![CDATA[ch_code = #{chCode},]]></if>
+		    	<if test="isAudience != null"><![CDATA[is_audience = #{isAudience},]]></if>
+		    	<if test="audienceName != null"><![CDATA[audience_name = #{audienceName},]]></if>
+		    	<if test="relatedTags != null"><![CDATA[related_tags = #{relatedTags},]]></if>
+		    	<if test="comments != null"><![CDATA[comments = #{comments},]]></if>
+		    	<if test="expirationTime != null"><![CDATA[expiration_time = #{expirationTime},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="qrcodePic != null"><![CDATA[qrcode_pic = #{qrcodePic},]]></if>
+		    	<if test="qrcodeUrl != null"><![CDATA[qrcode_url = #{qrcodeUrl},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="ticket != null"><![CDATA[ticket = #{ticket},]]></if>
+		    	<if test="qrcodeName != null"><![CDATA[qrcode_name = #{qrcodeName},]]></if>
+		    	<if test="authorization != null"><![CDATA[authorization = #{authorization}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatQrcode" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO wechat_qrcode (wx_name,wx_acct,ch_code,is_audience,audience_name,related_tags,comments,create_time,expiration_time,status,qrcode_pic,qrcode_url,batch_id,ticket,qrcode_name,authorization)
+			VALUES
+			(
+			  #{wxName},
+			  #{wxAcct},
+			  #{chCode},
+			  #{isAudience},
+			  #{audienceName},
+			  #{relatedTags},
+			  #{comments},
+			  now(),
+			  #{expirationTime},
+			  #{status},
+			  #{qrcodePic},
+			  #{qrcodeUrl},
+			  #{batchId},
+			  #{ticket},
+			  #{qrcodeName},
+			  #{authorization}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[UPDATE wechat_qrcode]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.WechatQrcode" resultType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.WechatQrcode" resultType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.WechatQrcode" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	
+	<!-- 根据输入的二维码名称模糊查询表wechat_qrcode -->
+	<select id="fuzzySearchQrcodeName" parameterType="cn.rongcapital.mkt.po.WechatQrcode" resultType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+			<![CDATA[AND status != 2 AND authorization = 0 ]]>
+			<if test="qrcodeName != null and qrcodeName != ''">
+				<bind name="fuzzy" value="'%' + _parameter.qrcodeName + '%'" />
+				<![CDATA[ AND qrcode_name like #{fuzzy}]]>
+			</if>
+		</where>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+	
+	<!-- 通过id删除数据 -->
+	<delete id="deleteById" parameterType="cn.rongcapital.mkt.po.WechatQrcode" >
+		<![CDATA[delete]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</delete>
+	
+	<!-- 通过BatchId更新 expiration_time qrcode_tag_ids qrcode_status -->
+	<update id="updataByBatchId" parameterType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[update wechat_qrcode]]>
+		set expiration_time = #{expirationTime}, related_tags = #{relatedTags}, comments = #{comments}, status = #{status}
+		<![CDATA[where batch_id = #{batchId}]]>
+		
+	</update>
+	
+	<!-- 通过Id更新 status -->
+	<update id="updateStatusById" parameterType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[UPDATE wechat_qrcode]]>
+		set status = #{status}		
+		<![CDATA[WHERE id = #{id}]]>	
+	</update>
+	
+	<!-- 查询列表，其中expirationTime是根据范围来查找 -->
+	<select id="selectListExpirationTime" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<where>
+		        <if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
+		    	<if test="status != null and status != 0"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="status == 0"><![CDATA[ AND status in (1, 3)]]></if>
+		    	<if test="expirationTimeStatus == 8"><![CDATA[ AND expiration_time IS NULL]]></if>		    	
+		    	<if test="expirationTime != null"><![CDATA[ AND expiration_time < #{expirationTime} AND expiration_time> #{expirationTimeNow}]]></if>
+		    	AND authorization = 0 
+		</where>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+	
+	<!-- 通过失效时间更新 status -->
+	<update id="updateStatusByExpirationTime" parameterType="cn.rongcapital.mkt.po.WechatQrcode">
+		<![CDATA[UPDATE wechat_qrcode]]>
+		set status = #{status}		
+		<![CDATA[WHERE expiration_time < DATE_FORMAT(#{expirationTime},'%Y-%m-%d %h:%i:%s')]]>	
+	</update>
+	
+	<!-- 根据渠道Id查询已经使用渠道的二维码数量 -->
+	<select id="selectUsedChannelCountBychCode" parameterType="int" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[where ch_code = #{chCode} AND status in('1','3')]]>
+	</select>
+	
+		<!-- 通过Id更新 status -->
+	<update id="unauthorizedByPubId" parameterType="java.lang.String">
+		<![CDATA[UPDATE wechat_qrcode]]>
+		set authorization = 1		
+		<![CDATA[WHERE wx_acct = #{pubId}]]>	
+	</update>
+	
+		<update id="authorizedByPubId" parameterType="java.lang.String">
+		<![CDATA[UPDATE wechat_qrcode]]>
+		set authorization = 0		
+		<![CDATA[WHERE wx_acct = #{pubId}]]>	
+	</update>
+	
+	
+</mapper>

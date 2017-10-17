@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.TagDao">
+
+	<!-- 所有查询列 -->
+	
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,name as name,status as status,create_time as createTime,update_time as updateTime,tag_group_id as tagGroupId]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tag]]></sql>
+	
+	<!-- 全部条件 -->
+
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="tagGroupId != null"><![CDATA[ AND tag_group_id = #{tagGroupId}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="updateTime != null"><![CDATA[update_time = #{updateTime},]]></if>
+		    	<if test="tagGroupId != null"><![CDATA[tag_group_id = #{tagGroupId}]]></if>
+		</set>
+	</sql>
+	
+
+	<!-- 插入action记录 -->
+	
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.Tag" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO tag (name,create_time,tag_group_id)
+			VALUES
+			(
+			  #{name},
+			  now(),
+			  #{tagGroupId}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.Tag">
+		<![CDATA[UPDATE tag]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.Tag" resultType="cn.rongcapital.mkt.po.Tag">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.Tag" resultType="cn.rongcapital.mkt.po.Tag">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.Tag" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<!-- 根据标签组Id查询标签列表 -->
+	<select id="selectListByGroupId" parameterType="String" resultType="cn.rongcapital.mkt.po.Tag">
+	   SELECT tg.id AS id,tg.name AS name
+	     FROM tag tg
+	    INNER JOIN tag_group_map tm
+	       ON tg.id = tm.tag_id
+	    WHERE tm.group_id = #{_parameter}
+	</select>
+	
+	<!-- 根据标签组次末层级Id查询标签列表 -->
+	<select id="selectListByParentGroupId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.Tag">
+        SELECT t.id AS id,t.name AS name
+	     FROM tag t
+	    INNER JOIN tag_group_map tgm
+	       ON t.id = tgm.tag_id
+			INNER JOIN taggroup tg
+         ON tg.id = tgm.group_id
+	    WHERE tg.parent_group_id = #{tagGroupId}
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+	
+	<!-- 根据标签组Id查询标签数量 -->
+	<select id="selectListCountByGroupId" parameterType="String" resultType="int">
+	   SELECT count(tg.id) as dataCount
+	     FROM tag tg
+	    INNER JOIN tag_group_map tm
+	       ON tg.id = tm.tag_id
+	    WHERE tm.group_id = #{_parameter}
+	</select>
+	
+	<!-- 通过Id进行查询 -->
+	<select id="selectTagsByIds" resultType="cn.rongcapital.mkt.po.Tag">
+		SELECT
+			id,name,status,create_time AS createTime,update_time AS updateTime,tag_group_id AS tagGroupId
+		FROM
+			tag
+		WHERE
+			id 
+		IN
+	 	<foreach collection="array" index="index" item="item" open="(" separator="," close=")">  
+          	#{item}   
+ 		 </foreach>  
+	</select>
+	
+</mapper>

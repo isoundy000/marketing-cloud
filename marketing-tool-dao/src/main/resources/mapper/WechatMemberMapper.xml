@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.WechatMemberDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,wx_code as wxCode,wx_name as wxName,wx_group_id as wxGroupId,nickname as nickname,sex as sex,country as country,province as province,city as city,county as county,birthday as birthday,signature as signature,is_friend as isFriend,pub_id as pubId,uin as uin,subscribe_yn as subscribeYn,subscribe_time as subscribeTime,active_time as activeTime,activity_48h_yn as activity48hYn,head_image_url as headImageUrl,remark as remark,status as status,create_time as createTime,update_time as updateTime,selected as selected,bitmap as bitmap,keyid as keyid,fans_json as fansJson]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM wechat_member]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
+		    	<if test="wxName != null"><![CDATA[ AND wx_name = #{wxName}]]></if>
+		    	<if test="wxGroupId != null"><![CDATA[ AND ((wx_group_id like CONCAT('%,',#{wxGroupId},'%')) OR (wx_group_id like CONCAT(#{wxGroupId},'%')))]]></if>
+		    	<if test="nickname != null"><![CDATA[ AND nickname = #{nickname}]]></if>
+		    	<if test="sex != null"><![CDATA[ AND sex = #{sex}]]></if>
+		    	<if test="country != null"><![CDATA[ AND country = #{country}]]></if>
+		    	<if test="province != null"><![CDATA[ AND province = #{province}]]></if>
+		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
+		    	<if test="county != null"><![CDATA[ AND county = #{county}]]></if>
+		    	<if test="birthday != null"><![CDATA[ AND birthday = #{birthday}]]></if>
+		    	<if test="signature != null"><![CDATA[ AND signature = #{signature}]]></if>
+		    	<if test="isFriend != null"><![CDATA[ AND is_friend = #{isFriend}]]></if>
+		    	<if test="pubId != null"><![CDATA[ AND pub_id = #{pubId}]]></if>
+		    	<if test="uin != null"><![CDATA[ AND uin = #{uin}]]></if>
+		    	<if test="subscribeYn != null"><![CDATA[ AND subscribe_yn = #{subscribeYn}]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[ AND subscribe_time = #{subscribeTime}]]></if>
+		    	<if test="activeTime != null"><![CDATA[ AND active_time = #{activeTime}]]></if>
+		    	<if test="activity48hYn != null"><![CDATA[ AND activity_48h_yn = #{activity48hYn}]]></if>
+		    	<if test="headImageUrl != null"><![CDATA[ AND head_image_url = #{headImageUrl}]]></if>
+		    	<if test="remark != null"><![CDATA[ AND remark = #{remark}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="selected != null"><![CDATA[ AND selected = #{selected}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode},]]></if>
+		    	<if test="wxName != null"><![CDATA[wx_name = #{wxName},]]></if>
+		    	<if test="wxGroupId != null"><![CDATA[wx_group_id = #{wxGroupId},]]></if>
+		    	<if test="nickname != null"><![CDATA[nickname = #{nickname},]]></if>
+		    	<if test="sex != null"><![CDATA[sex = #{sex},]]></if>
+		    	<if test="country != null"><![CDATA[country = #{country},]]></if>
+		    	<if test="province != null"><![CDATA[province = #{province},]]></if>
+		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
+		    	<if test="county != null"><![CDATA[county = #{county},]]></if>
+		    	<if test="birthday != null"><![CDATA[birthday = #{birthday},]]></if>
+		    	<if test="signature != null"><![CDATA[signature = #{signature},]]></if>
+		    	<if test="isFriend != null"><![CDATA[is_friend = #{isFriend},]]></if>
+		    	<if test="pubId != null"><![CDATA[pub_id = #{pubId},]]></if>
+		    	<if test="uin != null"><![CDATA[uin = #{uin},]]></if>
+		    	<if test="subscribeYn != null"><![CDATA[subscribe_yn = #{subscribeYn},]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[subscribe_time = #{subscribeTime},]]></if>
+		    	<if test="activeTime != null"><![CDATA[active_time = #{activeTime},]]></if>
+		    	<if test="activity48hYn != null"><![CDATA[activity_48h_yn = #{activity48hYn},]]></if>
+		    	<if test="headImageUrl != null"><![CDATA[head_image_url = #{headImageUrl},]]></if>
+		    	<if test="remark != null"><![CDATA[remark = #{remark},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="selected != null"><![CDATA[selected = #{selected},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid},]]></if>
+		    	<if test="fansJson != null"><![CDATA[fans_json = #{fansJson}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatMember" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,pub_id,uin,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time,selected,bitmap,keyid,fans_json)
+			VALUES
+			(
+			  #{wxCode},
+			  #{wxName},
+			  #{wxGroupId},
+			  #{nickname},
+			  #{sex},
+			  #{country},
+			  #{province},
+			  #{city},
+			  #{county},
+			  #{birthday},
+			  #{signature},
+			  #{isFriend},
+			  #{pubId},
+			  #{uin},
+			  #{subscribeYn},
+			  #{subscribeTime},
+			  #{activeTime},
+			  #{activity48hYn},
+			  #{headImageUrl},
+			  #{remark},
+			  now(),
+			  #{selected},
+			  #{bitmap},
+			  #{keyid},
+			  #{fansJson}
+			)
+		]]>
+	</insert>
+	
+	<insert id="batchInsert" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,signature,is_friend,pub_id,uin,subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,create_time,selected,bitmap,keyid,fans_json)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			  #{item.wxCode},
+			  #{item.wxName},
+			  #{item.wxGroupId},
+			  #{item.nickname},
+			  #{item.sex},
+			  #{item.country},
+			  #{item.province},
+			  #{item.city},
+			  #{item.county},
+			  #{item.birthday},
+			  #{item.signature},
+			  #{item.isFriend},
+			  #{item.pubId},
+			  #{item.uin},
+			  #{item.subscribeYn},
+			  #{item.subscribeTime},
+			  #{item.activeTime},
+			  #{item.activity48hYn},
+			  #{item.headImageUrl},
+			  #{item.remark},
+			  now(),
+			  #{item.selected},
+			  #{item.bitmap},
+			  #{item.keyid},
+			  #{item.fansJson}
+			)
+		</foreach>
+	</insert>
+	
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.WechatMember">
+		<![CDATA[UPDATE wechat_member]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.WechatMember" resultType="cn.rongcapital.mkt.po.WechatMember">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdListNoSelected" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.WechatMember">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE selected=0 and id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.WechatMember" resultType="cn.rongcapital.mkt.po.WechatMember">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.WechatMember" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<insert id="batchInsertFans" parameterType="java.util.List">
+		INSERT INTO wechat_member (wx_code,wx_name,wx_group_id,nickname,sex,country,province,city,county,birthday,
+								   subscribe_yn,subscribe_time,active_time,activity_48h_yn,head_image_url,remark,pub_id,
+								   create_time,bitmap,fans_json,selected)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+		(
+		#{item.wx_code},
+		#{item.wx_name},
+		#{item.wx_group_id},
+		#{item.nickname},
+		#{item.sex},
+		#{item.country},
+		#{item.province},
+		#{item.city},
+		#{item.county},
+		#{item.birthday},
+		#{item.subscribe_yn},
+		#{item.subscribe_time},
+		#{item.active_time},
+		#{item.activity_48h_yn},
+		#{item.head_image_url},
+		#{item.remark},
+		#{item.pub_id},
+		now(),
+		#{item.bitmap},
+		#{item.fans_json},
+		#{item.selected}
+		)
+		</foreach>
+	</insert>
+
+
+	<select id="selectIdByGroupIdAndWxAcct" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_code = #{wx_code} AND wx_group_id = #{wx_group_id}
+	</select>
+
+	<insert id="batchInsertContacts" parameterType="java.util.List">
+		INSERT INTO wechat_member (wx_code,wx_group_id,wx_name,sex,province,city,signature,uin,create_time)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.wx_code},
+			#{item.wx_group_id},
+			#{item.wx_name},
+			#{item.sex},
+			#{item.province},
+			#{item.city},
+			#{item.signature},
+			#{item.uin},
+			now()
+			)
+		</foreach>
+	</insert>
+
+	<select id="selectIdListByGroupId" parameterType="java.util.List" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE
+		<foreach collection="list" index="index" item="item" separator="OR">
+			(wx_group_id=#{item.importGroupId} and pub_id=#{item.wxAcct})
+		</foreach>
+	</select>
+
+	<select id="selectPeopleDetails" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.WechatMember">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = 0 and 
+		<foreach collection="list" index="index" item="item" separator="OR">
+			(wx_group_id=#{item.importGroupId} and pub_id=#{item.wxAcct})
+		</foreach>		
+	</select>
+
+	<insert id="batchInsertGroupMember" parameterType="java.util.List">
+		INSERT INTO wechat_member(wx_code,wx_group_id,head_image_url,nickname,is_friend,wx_name,uin)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			  #{item.wx_code},
+			  #{item.wx_group_id},
+			  #{item.head_image_url},
+			  #{item.nickname},
+			  #{item.is_friend},
+			  #{item.wx_name},
+			  #{item.uin}
+			)
+		</foreach>
+	</insert>
+
+	<select id="selectGroupMemeberCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(id)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_group_id = #{wx_group_id}
+	</select>
+
+	<select id="selectSearchInfo" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT wm.id,wx_name as name,sex,head_image_url,dp.id as contact_id,wm.birthday
+		FROM wechat_member wm
+		LEFT JOIN data_population dp
+		ON wm.wx_code = dp.wx_code
+		WHERE wx_name like CONCAT('%',#{wx_name},'%') AND 
+		<foreach collection="wechatAssetGroups" index="index" item="item" separator="OR" open="(" close=")">
+			(wm.wx_group_id=#{item.importGroupId} and wm.pub_id=#{item.wxAcct})
+		</foreach>
+	</select>
+
+	<select id="selectIdByPubIdAndOpenId" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_code = #{wx_code} AND pub_id = #{pub_id} AND wx_group_id = #{wx_group_id}
+	</select>
+
+	<delete id="deleteRecordByUin" parameterType="java.lang.String">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE uin = #{uin}
+	</delete>
+
+	<select id="selectNotSyncWechatMemberList" resultType="java.util.Map">
+		SELECT id,wx_name,sex,province,city,birthday
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE selected = 0
+		ORDER BY id
+		limit 500
+	</select>
+
+	<update id="updateSyncDataMark" parameterType="java.util.List">
+		UPDATE wechat_member
+		SET selected = 1
+		WHERE id in
+		<foreach collection="list" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</update>
+
+	<select id="selectedNotSyncCount" resultType="java.lang.Integer">
+		SELECT count(id)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE selected = 0
+	</select>
+
+	<select id="selectKeyidListByIdList" resultType="java.lang.Integer">
+		SELECT keyid
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 根据微信号删除 -->
+	<delete id="deleteFansByWxcode" parameterType="java.util.List">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE wx_code 
+		<foreach collection="list" item="item" index="index" separator="," open="IN (" close=")">
+			#{item.wx_code}
+		</foreach>
+	</delete>
+
+	<!-- 根据微信号删除 -->
+	<delete id="deleteFansByVO" parameterType="cn.rongcapital.mkt.vo.weixin.WXFansListVO">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE pub_id=#{pubId} AND wx_code 
+		<foreach collection="wechatMembers" item="item" index="index" separator="," open="IN (" close=")">
+			#{item.wxCode}
+		</foreach>
+	</delete>	
+
+	<delete id="deleteWechatMembersByIdsAndPubId" parameterType="java.util.Map">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE pub_id=#{pubId} AND wx_code 
+		<foreach collection="wechatMembers" item="item" index="index" separator="," open="IN (" close=")">
+			#{item.wxCode}
+		</foreach>
+	</delete>		
+		
+</mapper>

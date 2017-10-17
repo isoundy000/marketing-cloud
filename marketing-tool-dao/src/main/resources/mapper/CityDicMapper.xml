@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.CityDicDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ city_id as cityId,province_id as provinceId,city_code as cityCode,province_nameC as provinceNamec,city_nameC as cityNamec,status as status,create_time as createTime,update_time as updateTime,city_nameE as cityNamee]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM city_dic]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="cityId != null"><![CDATA[ AND city_id = #{cityId}]]></if>
+		    	<if test="provinceId != null"><![CDATA[ AND province_id = #{provinceId}]]></if>
+		    	<if test="cityCode != null"><![CDATA[ AND city_code = #{cityCode}]]></if>
+		    	<if test="provinceNamec != null"><![CDATA[ AND province_nameC = #{provinceNamec}]]></if>
+		    	<if test="cityNamec != null"><![CDATA[ AND city_nameC = #{cityNamec}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="cityNamee != null"><![CDATA[ AND city_nameE = #{cityNamee}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="cityId != null"><![CDATA[city_id = #{cityId},]]></if>
+		    	<if test="provinceId != null"><![CDATA[province_id = #{provinceId},]]></if>
+		    	<if test="cityCode != null"><![CDATA[city_code = #{cityCode},]]></if>
+		    	<if test="provinceNamec != null"><![CDATA[province_nameC = #{provinceNamec},]]></if>
+		    	<if test="cityNamec != null"><![CDATA[city_nameC = #{cityNamec},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="cityNamee != null"><![CDATA[city_nameE = #{cityNamee}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.CityDic" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO city_dic (city_id,province_id,city_code,province_nameC,city_nameC,create_time,city_nameE)
+			VALUES
+			(
+			  #{cityId},
+			  #{provinceId},
+			  #{cityCode},
+			  #{provinceNamec},
+			  #{cityNamec},
+			  now(),
+			  #{cityNamee}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.CityDic">
+		<![CDATA[UPDATE city_dic]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.CityDic" resultType="cn.rongcapital.mkt.po.CityDic">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.CityDic" resultType="cn.rongcapital.mkt.po.CityDic">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.CityDic" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	
+	
+</mapper>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.OriginalDataLoginDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,login_type as loginType,login_time as loginTime,logout_time as logoutTime,login_ip as loginIp,login_device as loginDevice,resolution_ratio as resolutionRatio,login_url as loginUrl,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique,bitmap as bitmap,wxmp_id as wxmpId,wx_code as wxCode]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM original_data_login]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="loginType != null"><![CDATA[ AND login_type = #{loginType}]]></if>
+		    	<if test="loginTime != null"><![CDATA[ AND login_time = #{loginTime}]]></if>
+		    	<if test="logoutTime != null"><![CDATA[ AND logout_time = #{logoutTime}]]></if>
+		    	<if test="loginIp != null"><![CDATA[ AND login_ip = #{loginIp}]]></if>
+		    	<if test="loginDevice != null"><![CDATA[ AND login_device = #{loginDevice}]]></if>
+		    	<if test="resolutionRatio != null"><![CDATA[ AND resolution_ratio = #{resolutionRatio}]]></if>
+		    	<if test="loginUrl != null"><![CDATA[ AND login_url = #{loginUrl}]]></if>
+		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
+		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
+		    	<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
+		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="fileUnique != null"><![CDATA[ AND file_unique = #{fileUnique}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="loginType != null"><![CDATA[login_type = #{loginType},]]></if>
+		    	<if test="loginTime != null"><![CDATA[login_time = #{loginTime},]]></if>
+		    	<if test="logoutTime != null"><![CDATA[logout_time = #{logoutTime},]]></if>
+		    	<if test="loginIp != null"><![CDATA[login_ip = #{loginIp},]]></if>
+		    	<if test="loginDevice != null"><![CDATA[login_device = #{loginDevice},]]></if>
+		    	<if test="resolutionRatio != null"><![CDATA[resolution_ratio = #{resolutionRatio},]]></if>
+		    	<if test="loginUrl != null"><![CDATA[login_url = #{loginUrl},]]></if>
+		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
+		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
+		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
+		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+		    	<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
+		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataLogin" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,login_device,resolution_ratio,login_url,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,file_unique,bitmap,wxmp_id,wx_code)
+			VALUES
+			(
+			  #{loginType},
+			  #{loginTime},
+			  #{logoutTime},
+			  #{loginIp},
+			  #{loginDevice},
+			  #{resolutionRatio},
+			  #{loginUrl},
+			  #{identifyNo},
+			  #{drivingLicense},
+			  #{email},
+			  #{mobile},
+			  #{tel},
+			  #{qq},
+			  #{acctType},
+			  #{acctNo},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
+			  #{phoneMac},
+			  now(),
+			  #{source},
+			  #{batchId},
+			  #{fileUnique},
+			  #{bitmap},
+			  #{wxmpId},
+			  #{wxCode}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.OriginalDataLogin">
+		<![CDATA[UPDATE original_data_login]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<update id="updateStatusByFileUnique">
+		update original_data_login set status = #{status} where file_unique = #{fileUnique}
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.OriginalDataLogin" resultType="cn.rongcapital.mkt.po.OriginalDataLogin">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.OriginalDataLogin" resultType="cn.rongcapital.mkt.po.OriginalDataLogin">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.OriginalDataLogin" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO original_data_login (login_type,login_time,logout_time,login_ip,
+			login_device,resolution_ratio,login_url,identify_no,driving_license,
+			email,mobile,tel,QQ,acct_type,acct_no,IDFA,IMEI,UDID,phone_mac,status,
+			source,file_unique,batch_id,bitmap,wxmp_id,create_time,wx_code)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.login_type},
+			#{item.login_time,jdbcType=TIMESTAMP},
+			#{item.logout_time,jdbcType=TIMESTAMP},
+			#{item.login_ip},
+			#{item.login_device},
+			#{item.resolution_ratio},
+			#{item.login_url},
+			#{item.identify_no},
+			#{item.driving_license},
+			#{item.email},
+			#{item.mobile},
+			#{item.tel},
+			#{item.qq},
+			#{item.acct_type},
+			#{item.acct_no},
+			#{item.idfa},
+			#{item.imei},
+			#{item.udid},
+			#{item.phone_mac},
+			#{item.status},
+			#{item.source},
+			#{item.file_unique},
+			#{item.batch_id},
+			#{item.bitmap},
+			#{item.wxmp_id},
+			now(),
+			#{item.wx_code}
+			)
+		</foreach>
+	</insert>
+
+	<select id="selelctIdListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE file_unique = #{file_unique}
+	</select>
+
+	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE file_unique = #{file_unique}
+	</select>
+</mapper>

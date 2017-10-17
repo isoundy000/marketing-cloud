@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.ContactTemplateDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,contact_id as contactId,contact_name as contactName,contact_title as contactTitle,contact_descript as contactDescript,field_name as fieldName,field_code as fieldCode,field_type as fieldType,selected as selected,status as status,create_time as createTime,update_time as updateTime,qrcode_url as qrcodeUrl,qrcode_shorturl as qrcodeShorturl,qrcode_pic as qrcodePic,page_views as pageViews,key_list as keyList,required as required,ischecked as ischecked,is_remember_import_key as isRememberImportKey,field_index as fieldIndex,is_shown_in_feedback as isShownInFeedback,del_status as delStatus]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM contact_template]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="contactId != null"><![CDATA[ AND contact_id = #{contactId}]]></if>
+		    	<if test="contactName != null"><![CDATA[ AND contact_name = #{contactName}]]></if>
+		    	<if test="contactTitle != null"><![CDATA[ AND contact_title = #{contactTitle}]]></if>
+		    	<if test="contactDescript != null"><![CDATA[ AND contact_descript = #{contactDescript}]]></if>
+		    	<if test="fieldName != null"><![CDATA[ AND field_name = #{fieldName}]]></if>
+		    	<if test="fieldCode != null"><![CDATA[ AND field_code = #{fieldCode}]]></if>
+		    	<if test="fieldType != null"><![CDATA[ AND field_type = #{fieldType}]]></if>
+		    	<if test="selected != null"><![CDATA[ AND selected = #{selected}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="qrcodeUrl != null"><![CDATA[ AND qrcode_url = #{qrcodeUrl}]]></if>
+		    	<if test="qrcodeShorturl != null"><![CDATA[ AND qrcode_shorturl = #{qrcodeShorturl}]]></if>
+		    	<if test="qrcodePic != null"><![CDATA[ AND qrcode_pic = #{qrcodePic}]]></if>
+		    	<if test="pageViews != null"><![CDATA[ AND page_views = #{pageViews}]]></if>
+		    	<if test="keyList != null"><![CDATA[ AND key_list = #{keyList}]]></if>
+		    	<if test="required != null"><![CDATA[ AND required = #{required}]]></if>
+		    	<if test="ischecked != null"><![CDATA[ AND ischecked = #{ischecked}]]></if>
+		    	<if test="isRememberImportKey != null"><![CDATA[ AND is_remember_import_key = #{isRememberImportKey}]]></if>
+		    	<if test="fieldIndex != null"><![CDATA[ AND field_index = #{fieldIndex}]]></if>
+		    	<if test="isShownInFeedback != null"><![CDATA[ AND is_shown_in_feedback = #{isShownInFeedback}]]></if>
+		    	<if test="delStatus != null"><![CDATA[ AND del_status = #{delStatus}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 模糊条件 -->
+	<sql id="QUERY_WHERE_FUZZY">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="contactId != null"><![CDATA[ AND contact_id = #{contactId}]]></if>
+		    	<if test="contactName != null">
+		    	<bind name="fuzzy" value="'%' + _parameter.contactName + '%'" />
+		    	<![CDATA[ AND contact_name like #{fuzzy}]]></if>
+		    	<if test="contactTitle != null"><![CDATA[ AND contact_title = #{contactTitle}]]></if>
+		    	<if test="contactDescript != null"><![CDATA[ AND contact_descript = #{contactDescript}]]></if>
+		    	<if test="fieldName != null"><![CDATA[ AND field_name = #{fieldName}]]></if>
+		    	<if test="fieldCode != null"><![CDATA[ AND field_code = #{fieldCode}]]></if>
+		    	<if test="fieldType != null"><![CDATA[ AND field_type = #{fieldType}]]></if>
+		    	<if test="selected != null"><![CDATA[ AND selected = #{selected}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="qrcodeUrl != null"><![CDATA[ AND qrcode_url = #{qrcodeUrl}]]></if>
+		    	<if test="qrcodeShorturl != null"><![CDATA[ AND qrcode_shorturl = #{qrcodeShorturl}]]></if>
+		    	<if test="qrcodePic != null"><![CDATA[ AND qrcode_pic = #{qrcodePic}]]></if>
+		    	<if test="pageViews != null"><![CDATA[ AND page_views = #{pageViews}]]></if>
+		    	<if test="keyList != null"><![CDATA[ AND key_list = #{keyList}]]></if>
+		    	<if test="required != null"><![CDATA[ AND required = #{required}]]></if>
+		    	<if test="ischecked != null"><![CDATA[ AND ischecked = #{ischecked}]]></if>
+		    	<if test="isRememberImportKey != null"><![CDATA[ AND is_remember_import_key = #{isRememberImportKey}]]></if>
+		    	<if test="fieldIndex != null"><![CDATA[ AND field_index = #{fieldIndex}]]></if>
+		    	<if test="isShownInFeedback != null"><![CDATA[ AND is_shown_in_feedback = #{isShownInFeedback}]]></if>
+		    	<if test="delStatus != null"><![CDATA[ AND del_status = #{delStatus}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="contactId != null"><![CDATA[contact_id = #{contactId},]]></if>
+		    	<if test="contactName != null"><![CDATA[contact_name = #{contactName},]]></if>
+		    	<if test="contactTitle != null"><![CDATA[contact_title = #{contactTitle},]]></if>
+		    	<if test="contactDescript != null"><![CDATA[contact_descript = #{contactDescript},]]></if>
+		    	<if test="fieldName != null"><![CDATA[field_name = #{fieldName},]]></if>
+		    	<if test="fieldCode != null"><![CDATA[field_code = #{fieldCode},]]></if>
+		    	<if test="fieldType != null"><![CDATA[field_type = #{fieldType},]]></if>
+		    	<if test="selected != null"><![CDATA[selected = #{selected},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="qrcodeUrl != null"><![CDATA[qrcode_url = #{qrcodeUrl},]]></if>
+		    	<if test="qrcodeShorturl != null"><![CDATA[qrcode_shorturl = #{qrcodeShorturl},]]></if>
+		    	<if test="qrcodePic != null"><![CDATA[qrcode_pic = #{qrcodePic},]]></if>
+		    	<if test="pageViews != null"><![CDATA[page_views = #{pageViews},]]></if>
+		    	<if test="keyList != null"><![CDATA[key_list = #{keyList},]]></if>
+		    	<if test="required != null"><![CDATA[required = #{required},]]></if>
+		    	<if test="ischecked != null"><![CDATA[ischecked = #{ischecked},]]></if>
+		    	<if test="isRememberImportKey != null"><![CDATA[is_remember_import_key = #{isRememberImportKey},]]></if>
+		    	<if test="fieldIndex != null"><![CDATA[field_index = #{fieldIndex},]]></if>
+			<if test="updateTime != null"><![CDATA[update_time = #{updateTime},]]></if>
+			<if test="isShownInFeedback != null"><![CDATA[is_shown_in_feedback = #{isShownInFeedback},]]></if>
+		    	<if test="delStatus != null"><![CDATA[del_status = #{delStatus}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ContactTemplate" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO contact_template (contact_id,contact_name,contact_title,contact_descript,field_name,field_code,field_type,selected,create_time,qrcode_url,qrcode_shorturl,qrcode_pic,page_views,key_list,required,ischecked,is_remember_import_key,field_index,is_shown_in_feedback,del_status)
+			VALUES
+			(
+			  #{contactId},
+			  #{contactName},
+			  #{contactTitle},
+			  #{contactDescript},
+			  #{fieldName},
+			  #{fieldCode},
+			  #{fieldType},
+			  #{selected},
+			  now(),
+			  #{qrcodeUrl},
+			  #{qrcodeShorturl},
+			  #{qrcodePic},
+			  #{pageViews},
+			  #{keyList},
+			  #{required},
+			  #{ischecked},
+			  #{isRememberImportKey},
+			  #{fieldIndex},
+			  #{isShownInFeedback},
+			  #{delStatus}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效  -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[UPDATE contact_template]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE 1 = 1]]>
+		<if test="id != null"><![CDATA[ and id = #{id}]]></if>
+		<if test="contactId != null"><![CDATA[ and contact_id = #{contactId}]]></if>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<select id="selectListAll" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<select id="selectListGroupByCId" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_FUZZY"/>
+		<![CDATA[ GROUP BY contact_id]]>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<!-- 通过id更新浏览次数 -->
+	<update id="updatePageViewsById" parameterType="cn.rongcapital.mkt.po.ContactTemplate" >
+		<![CDATA[update contact_template set page_views=#{pageViews} where contact_id=#{contactId}]]>
+	</update>
+	<delete id="deleteByCId" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[delete from  contact_template  where contact_id=#{contactId}]]>
+	</delete>
+
+	<select id="selectIdByContactId" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[SELECT]]>
+		<![CDATA[ct.id as id]]>
+		<![CDATA[from default_contact_template dct, contact_template ct]]>
+		<![CDATA[where dct.field_name=ct.field_name ]]>
+		<![CDATA[and dct.field_code=ct.field_code ]]>
+		<![CDATA[and ct.contact_id = #{contactId} ]]>
+		<![CDATA[and ct.required=1]]>
+		<![CDATA[and dct.is_primary_key=1]]>
+	</select>
+
+
+	<!-- 修改记录通过主键  和基类功能相同  因基类方法updateById有问题   注：近在原方法后加字符 '1'-->
+	<update id="updateById1" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[UPDATE contact_template]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE 1 = 1]]>
+		<if test="id != null"><![CDATA[and id = #{id}]]></if>
+	</update>
+
+	<select id="selectFieldCodeListByFieldNameList" parameterType="java.util.List" resultType="java.lang.String">
+		SELECT field_code
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE field_name in
+		<foreach collection="filedNameList" item="fieldName" index="index" separator="," open="(" close=")">
+			#{fieldName}
+		</foreach>
+	</select>
+
+	<select id="selectRealContactTemplateListCount" parameterType="cn.rongcapital.mkt.po.ContactTemplate" resultType="java.lang.Integer">
+		<![CDATA[SELECT count(distinct contact_id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_FUZZY"/>
+	</select>
+
+	<update id="updateKeyListById" parameterType="cn.rongcapital.mkt.po.ContactTemplate">
+		<![CDATA[UPDATE contact_template]]>
+		<set>
+		<![CDATA[key_list = #{keyList},]]>
+		<![CDATA[is_remember_import_key = #{isRememberImportKey},]]>
+		</set>
+		<![CDATA[WHERE 1 = 1]]>
+		<if test="id != null"><![CDATA[ and id = #{id}]]></if>
+		<if test="contactId != null"><![CDATA[ and contact_id = #{contactId}]]></if>
+	</update>
+</mapper>

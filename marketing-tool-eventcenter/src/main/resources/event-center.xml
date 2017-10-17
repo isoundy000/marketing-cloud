@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context.xsd
+               http://www.springframework.org/schema/tx
+               http://www.springframework.org/schema/tx/spring-tx.xsd
+               http://www.springframework.org/schema/aop
+               http://www.springframework.org/schema/aop/spring-aop.xsd
+               http://www.springframework.org/schema/integration
+			   http://www.springframework.org/schema/integration/spring-integration.xsd">
+	
+	<context:component-scan base-package="cn.rongcapital.mkt.event.service"/>
+	<context:component-scan base-package="cn.rongcapital.mkt.event.activator"/>
+	
+	<!-- default poller -->
+	<int:poller default="true" fixed-delay="50"/>
+	
+	<!-- events channel -->
+	<int:channel id="events">
+		<int:queue/>
+	</int:channel>
+	
+	<!-- internal events channels -->
+	<int:channel id="systemEvents">
+		<int:queue/>
+	</int:channel>
+	<int:channel id="marketingEvents">
+		<int:queue/>
+	</int:channel>
+	
+	<!-- route by header value -->
+	<int:header-value-router input-channel="events" header-name="type">
+		<int:poller max-messages-per-poll="1" task-executor="routeExecutor" fixed-rate="50"/>
+		<int:mapping value="SYSTEM" channel="systemEvents"/>
+		<int:mapping value="MARKETING" channel="marketingEvents"/>
+	</int:header-value-router>
+	
+	<!-- process activator -->
+<!-- 	<int:service-activator ref="systemEventProcessor" method="process" input-channel="systemEvents"> -->
+<!-- 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/> -->
+<!-- 	</int:service-activator> -->
+<!-- 	<int:service-activator ref="marketingEventProcessor" method="process" input-channel="marketingEvents"> -->
+<!-- 		<int:poller max-messages-per-poll="1" task-executor="processExecutor" fixed-rate="50"/> -->
+<!-- 	</int:service-activator> -->
+	
+	<!-- event dispatcher -->
+	<bean id="eventDispatcherActivator" class="cn.rongcapital.mkt.event.activator.EventDispatcherActivator">
+		<property name="channel" ref="events"/>
+	</bean>
+	
+	<!-- FIXME event processors -->
+<!-- 	<bean id="systemEventProcessor" class="cn.rongcapital.mkt.event.test.TestSystemEventProcessor"/> -->
+<!-- 	<bean id="marketingEventProcessor" class="cn.rongcapital.mkt.event.test.TestMarketingEventProcessor"/> -->
+	
+	<!-- task executors -->
+	<bean id="routeExecutor" 
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="${event.router.executor.corePoolSize}"/>
+		<property name="maxPoolSize" value="${event.router.executor.maxPoolSize}"/>
+	</bean>
+	<bean id="processExecutor" 
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="${event.processor.executor.corePoolSize}"/>
+		<property name="maxPoolSize" value="${event.processor.executor.maxPoolSize}"/>
+	</bean>
+	
+</beans>

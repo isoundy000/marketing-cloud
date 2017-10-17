@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.SmsTaskHeadDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,sms_task_name as smsTaskName,sms_task_signature_id as smsTaskSignatureId,sms_task_material_id as smsTaskMaterialId,sms_task_material_content as smsTaskMaterialContent,sms_task_send_type as smsTaskSendType,sms_task_app_type as smsTaskAppType,sms_task_status as smsTaskStatus,status as status,create_time as createTime,update_time as updateTime,total_cover_num as totalCoverNum,sending_success_num as sendingSuccessNum,waiting_num as waitingNum,sending_fail_num as sendingFailNum,audience_generate_status as audienceGenerateStatus]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_task_head]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="smsTaskName != null"><![CDATA[ AND sms_task_name like CONCAT('%',#{smsTaskName},'%' )]]></if>
+		    	<if test="smsTaskSignatureId != null"><![CDATA[ AND sms_task_signature_id = #{smsTaskSignatureId}]]></if>
+		    	<if test="smsTaskMaterialId != null"><![CDATA[ AND sms_task_material_id = #{smsTaskMaterialId}]]></if>
+		    	<if test="smsTaskMaterialContent != null"><![CDATA[ AND sms_task_material_content = #{smsTaskMaterialContent}]]></if>
+		    	<if test="smsTaskSendType != null"><![CDATA[ AND sms_task_send_type = #{smsTaskSendType}]]></if>
+		    	<if test="smsTaskAppType != null"><![CDATA[ AND sms_task_app_type = #{smsTaskAppType}]]></if>
+		    	<if test="smsTaskStatus != null"><![CDATA[ AND sms_task_status = #{smsTaskStatus}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="totalCoverNum != null"><![CDATA[ AND total_cover_num = #{totalCoverNum}]]></if>
+		    	<if test="sendingSuccessNum != null"><![CDATA[ AND sending_success_num = #{sendingSuccessNum}]]></if>
+		    	<if test="waitingNum != null"><![CDATA[ AND waiting_num = #{waitingNum}]]></if>
+		    	<if test="sendingFailNum != null"><![CDATA[ AND sending_fail_num = #{sendingFailNum}]]></if>
+			    <if test="audienceGenerateStatus != null"><![CDATA[ AND audience_generate_status = #{audienceGenerateStatus}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="smsTaskName != null"><![CDATA[sms_task_name = #{smsTaskName},]]></if>
+		    	<if test="smsTaskSignatureId != null"><![CDATA[sms_task_signature_id = #{smsTaskSignatureId},]]></if>
+		    	<if test="smsTaskMaterialId != null"><![CDATA[sms_task_material_id = #{smsTaskMaterialId},]]></if>
+		    	<if test="smsTaskMaterialContent != null"><![CDATA[sms_task_material_content = #{smsTaskMaterialContent},]]></if>
+		    	<if test="smsTaskSendType != null"><![CDATA[sms_task_send_type = #{smsTaskSendType},]]></if>
+		    	<if test="smsTaskAppType != null"><![CDATA[sms_task_app_type = #{smsTaskAppType},]]></if>
+		    	<if test="smsTaskStatus != null"><![CDATA[sms_task_status = #{smsTaskStatus},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="totalCoverNum != null"><![CDATA[total_cover_num = #{totalCoverNum},]]></if>
+		    	<if test="sendingSuccessNum != null"><![CDATA[sending_success_num = #{sendingSuccessNum},]]></if>
+		    	<if test="waitingNum != null"><![CDATA[waiting_num = #{waitingNum},]]></if>
+		    	<if test="sendingFailNum != null"><![CDATA[sending_fail_num = #{sendingFailNum},]]></if>
+			    <if test="audienceGenerateStatus != null"><![CDATA[audience_generate_status = #{audienceGenerateStatus}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsTaskHead" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO sms_task_head (sms_task_name,sms_task_signature_id,sms_task_material_id,sms_task_material_content,sms_task_send_type,sms_task_app_type,sms_task_status,create_time,total_cover_num,sending_success_num,waiting_num,sending_fail_num,audience_generate_status)
+			VALUES
+			(
+			  #{smsTaskName},
+			  #{smsTaskSignatureId},
+			  #{smsTaskMaterialId},
+			  #{smsTaskMaterialContent},
+			  #{smsTaskSendType},
+			  #{smsTaskAppType},
+			  #{smsTaskStatus},
+			  now(),
+			  #{totalCoverNum},
+			  #{sendingSuccessNum},
+			  #{waitingNum},
+			  #{sendingFailNum},
+			  #{audienceGenerateStatus}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.SmsTaskHead">
+		<![CDATA[UPDATE sms_task_head]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsTaskHead" resultType="cn.rongcapital.mkt.po.SmsTaskHead">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.SmsTaskHead" resultType="cn.rongcapital.mkt.po.SmsTaskHead">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 全部条件 -->
+	<sql id="MATERIAL_VALIDATE_QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="smsTaskMaterialId != null"><![CDATA[ AND sms_task_material_id = #{smsTaskMaterialId}]]></if>
+		    	<if test="smsTaskStatus != null"><![CDATA[ AND sms_task_status != #{smsTaskStatus}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		</where>
+	</sql>
+	
+		<!-- 查询,通过条件 -->
+	<select id="selectListByMaterial" parameterType="cn.rongcapital.mkt.po.SmsTaskHead" resultType="cn.rongcapital.mkt.po.SmsTaskHead">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="MATERIAL_VALIDATE_QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.SmsTaskHead" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	
+	<select id="countStatusById" parameterType="java.lang.Long" resultType="cn.rongcapital.mkt.vo.sms.out.SmsTaskSendStatusVo">
+		SELECT
+			stds.sms_task_send_status AS smsTaskSendStatus,
+			COUNT(DISTINCT stds.id) AS count
+		FROM
+			sms_task_head sth,
+			sms_task_detail std,
+			sms_task_detail_state stds
+		WHERE
+			sth.id = #{id}
+		AND	sth.id = std.sms_task_head_id
+		AND std.id = stds.sms_task_detail_id
+		GROUP BY
+			stds.sms_task_send_status
+	</select>
+	
+	<!-- 根据细分id查询除了未发布和已结束的所有短信个数  -->
+	<select id="selectTaskStatusCount" parameterType="cn.rongcapital.mkt.po.SmsTaskBody" resultType="int">
+		SELECT COUNT(h.sms_task_status) 
+		FROM sms_task_head h,sms_task_body b 
+		WHERE h.id = b.sms_task_head_id and (h.sms_task_status =1 or h.sms_task_status =2 or h.sms_task_status =3) and b.target_type = #{targetType} and b.target_id = #{targetId}
+	</select>
+</mapper>

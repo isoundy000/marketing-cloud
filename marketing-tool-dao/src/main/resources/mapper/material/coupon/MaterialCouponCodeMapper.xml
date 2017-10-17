@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.material.coupon.MaterialCouponCodeDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,coupon_id as couponId,code as code,user as user,release_status as releaseStatus,verify_status as verifyStatus,verify_time as verifyTime,status as status,create_time as createTime,update_time as updateTime]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM material_coupon_code]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="couponId != null"><![CDATA[ AND coupon_id = #{couponId}]]></if>
+		    	<if test="code != null"><![CDATA[ AND code = #{code}]]></if>
+		    	<if test="user != null"><![CDATA[ AND user = #{user}]]></if>
+		    	<if test="releaseStatus != null"><![CDATA[ AND release_status = #{releaseStatus}]]></if>
+		    	<if test="verifyStatus != null"><![CDATA[ AND verify_status = #{verifyStatus}]]></if>
+		    	<if test="verifyTime != null"><![CDATA[ AND verify_time = #{verifyTime}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 已发放条件 -->
+	<sql id="QUERY_WHERE_CLAUSE_ISSUED">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="couponId != null"><![CDATA[ AND coupon_id = #{couponId}]]></if>
+		    	<if test="code != null"><![CDATA[ AND code = #{code}]]></if>
+		    	<![CDATA[ AND release_status <> 'unreleased']]>
+		    	<if test="verifyStatus != null"><![CDATA[ AND verify_status = #{verifyStatus}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="couponId != null"><![CDATA[coupon_id = #{couponId},]]></if>
+		    	<if test="code != null"><![CDATA[code = #{code},]]></if>
+		    	<if test="user != null"><![CDATA[user = #{user},]]></if>
+		    	<if test="releaseStatus != null"><![CDATA[release_status = #{releaseStatus},]]></if>
+		    	<if test="verifyStatus != null"><![CDATA[verify_status = #{verifyStatus},]]></if>
+		    	<if test="verifyTime != null"><![CDATA[verify_time = #{verifyTime},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO material_coupon_code (coupon_id,code,user,release_status,verify_status,verify_time,create_time,status)
+			VALUES
+			(
+			  #{couponId},
+			  #{code},
+			  #{user},
+			  #{releaseStatus},
+			  #{verifyStatus},
+			  #{verifyTime},
+			  now(),
+			  #{status}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode">
+		<![CDATA[UPDATE material_coupon_code]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" resultType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" resultType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 查询已发放优惠码条件 -->
+	<select id="selectIssuedList" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" resultType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE_ISSUED"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+	
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	
+	<!-- 修改记录通过主键和有效状态 -->
+	<update id="updateByIdAndStatus" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode">
+		<![CDATA[UPDATE material_coupon_code]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id} AND status = 0]]>
+	</update>
+	<!-- 根据优惠券ID和发放状态 查询优惠券数量 -->
+	<select id="selectCouponTotalByCouponIdAndReleStatus" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.material.coupon.po.MeterialCouponCodeCountByStatus">
+		<![CDATA[ SELECT coupon_id as id,release_status as status,count(coupon_id) as count ]]>
+		<include refid="QUERY_FROM_TABLE"/> 
+		<![CDATA[WHERE status = 0]]>
+		<if test="id != null and id !=''"><![CDATA[ and coupon_id = #{id}]]></if>
+		<if test="releaseStatusList != null">
+			and release_status in
+			<foreach collection="releaseStatusList" item="ReleaseStatus" index="index" separator="," open="(" close=")">
+				#{ReleaseStatus}
+			</foreach>
+		</if>
+		<![CDATA[ group by coupon_id,release_status ]]>
+	</select>
+	
+	<!-- 根据优惠券ID和核销状态 查询优惠券数量 -->
+	<select id="selectCouponTotalByCouponIdAndVeriStatus" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.material.coupon.po.MeterialCouponCodeCountByStatus">
+		<![CDATA[ SELECT coupon_id as id,verify_status as status,count(coupon_id) as count  ]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE status = 0]]>
+		<if test="id != null and id !=''"><![CDATA[ and coupon_id = #{id}]]></if>
+		<if test="verifyStatusList != null">
+			and verify_status in
+			<foreach collection="verifyStatusList" item="VerifyStatus" index="index" separator="," open="(" close=")">
+				#{VerifyStatus}
+			</foreach>
+		</if>
+		<![CDATA[ group by coupon_id,verify_status ]]>
+	</select>
+	
+	
+	<!-- 至优惠码成删除状态 -->
+	<update id="updateByCouponId" parameterType="long">
+		update material_coupon_code set status=1 where coupon_id=#{id} and status=0
+	</update>
+	
+	<!-- 批量修改记录通过主键和有效状态 -->
+	<update id="batchUpdateByIdAndStatus" parameterType="java.util.List">
+		<foreach collection="list" index="index" item="item" separator=";" open="" close=";">
+		<![CDATA[UPDATE material_coupon_code]]>
+		<set>
+		    	<if test="item.couponId != null"><![CDATA[coupon_id = #{item.couponId},]]></if>
+		    	<if test="item.code != null"><![CDATA[code = #{item.code},]]></if>
+		    	<if test="item.user != null"><![CDATA[user = #{item.user},]]></if>
+		    	<if test="item.releaseStatus != null"><![CDATA[release_status = #{item.releaseStatus},]]></if>
+		    	<if test="item.verifyStatus != null"><![CDATA[verify_status = #{item.verifyStatus},]]></if>
+		    	<if test="item.status != null"><![CDATA[status = #{item.status}]]></if>
+		</set>
+		<![CDATA[WHERE id = #{item.id} AND status = 0]]>
+		</foreach>
+	</update>
+	
+	<!-- 总数查询,通过条件 -->
+	<select id="getCouponCodeVerifyList" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.material.coupon.vo.out.MaterialCouponCodeVerifyListOut">
+		<![CDATA[SELECT t1.amount as amount,t1.channel_code as channelCode,t2.id,t2.code,t2.user,t2.verify_status as status,t2.verify_time as verifyTimeDate]]>
+		<![CDATA[ FROM material_coupon t1 INNER JOIN material_coupon_code t2 ON t1.id = t2.coupon_id]]>
+		<![CDATA[ WHERE t1.id = #{id} AND t1.status = 0 AND t2.status = 0]]>
+    	<if test="user != null and user != ''">
+    		<bind name="userlike" value="'%'+user+'%'"/>
+	    	<![CDATA[ AND t2.user like #{userlike}]]>
+    	</if>
+    	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
+    	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>
+    	<choose>
+	    	<when test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></when>
+	    	<when test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time >= #{expireTime})]]></when>
+	    	<otherwise></otherwise>
+    	</choose>
+    	<![CDATA[ ORDER BY t2.id ASC]]>
+    	<![CDATA[ LIMIT #{index},#{size}]]>
+	</select>
+	<!-- 总数查询,通过条件 -->
+	<select id="getCouponCodeVerifyListCnt" parameterType="java.util.Map" resultType="int">
+		<![CDATA[SELECT COUNT(t2.id)]]>
+		<![CDATA[ FROM material_coupon t1 INNER JOIN material_coupon_code t2 ON t1.id = t2.coupon_id]]>
+		<![CDATA[ WHERE t1.id = #{id} AND t1.status = 0 AND t2.status = 0]]>
+    	<if test="user != null and user != ''">
+    		<bind name="userlike" value="'%'+user+'%'"/>
+	    	<![CDATA[ AND t2.user like #{userlike}]]>
+    	</if>
+    	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
+    	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>
+    	<choose>
+	    	<when test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></when>
+	    	<when test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time >= #{expireTime})]]></when>
+	    	<otherwise></otherwise>
+    	</choose>
+	</select>
+	
+	<!-- 批量保存优惠码 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO material_coupon_code (coupon_id,code,user,release_status,verify_status,verify_time,status,create_time,update_time)
+        VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.couponId},
+			#{item.code},
+			#{item.user},
+			#{item.releaseStatus},
+			#{item.verifyStatus},
+			#{item.verifyTime},
+			#{item.status},
+			#{item.createTime},
+			#{item.updateTime}
+			)
+		</foreach>
+	</insert>
+	
+	<!-- 获取核销对账数据用户标识信息列表 -->
+	<select id="getCouponCodeVerifyUserInfoList" parameterType="java.util.Map" resultType="java.lang.String">
+    	<![CDATA[ select t2.user as userinfo ]]>
+    	<![CDATA[ FROM material_coupon t1 INNER JOIN material_coupon_code t2 ON t1.id = t2.coupon_id]]>
+		<![CDATA[ WHERE t1.id = #{id} AND t1.status = 0 AND t2.status = 0 AND t2.user is not null ]]>
+    	<if test="user != null and user != ''">
+    		<bind name="userlike" value="'%'+user+'%'"/>
+	    	<![CDATA[ AND t2.user like #{userlike}]]>
+    	</if>
+    	<if test="releaseStatus != null and releaseStatus != ''"><![CDATA[ AND t2.release_status = #{releaseStatus}]]></if>
+    	<if test="verifyStatus != null and verifyStatus != ''"><![CDATA[ AND t2.verify_status = #{verifyStatus}]]></if>
+    	<choose>
+	    	<when test="expireStatus == 'expired'"><![CDATA[ AND t1.end_time IS NOT NULL AND t1.end_time < #{expireTime}]]></when>
+	    	<when test="expireStatus == 'unexpired'"><![CDATA[ AND (t1.end_time IS NULL OR t1.end_time >= #{expireTime})]]></when>
+	    	<otherwise></otherwise>
+    	</choose>
+    </select>
+	
+	
+		<!-- 已发放所有的数量 -->
+	<select id="getTotleIssuedListCount" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" resultType="int">
+		<![CDATA[SELECT count(1)]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE_ISSUED"/>
+	</select>
+	<!-- 所有的数量-->
+	<select id="getTotleListCount" parameterType="cn.rongcapital.mkt.material.coupon.po.MaterialCouponCode" resultType="int">
+		<![CDATA[SELECT count(1)]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 删除优惠码  -->
+	<delete id="deleteCodeByCouponId" parameterType="Long">
+		delete 
+		<include refid="QUERY_FROM_TABLE"/>
+		where coupon_id = #{id}
+	</delete>
+	
+	
+	
+	<!-- 统计优惠券投放成功，失败数量 -->
+	<select id="getCouponPutInCount" parameterType="long" resultType="java.util.Map">
+	     SELECT  release_status as status,count(1) as cnt  FROM material_coupon_code WHERE
+	 coupon_id=#{id}  <![CDATA[ and release_status>1 ]]>  and status=0
+	 	group by release_status
+	</select>
+	
+	<!-- 统计优惠券已核销,未核销金额 -->
+	<select id="getCouponVerifyCount" parameterType="long" resultType="java.util.Map">
+		SELECT verify_status as status,count(1) as cnt FROM material_coupon_code  Where status=0 and coupon_id=#{id}
+	  <![CDATA[ and verify_status<3 and  release_status=2 ]]>
+		group by verify_status
+	</select>
+</mapper>

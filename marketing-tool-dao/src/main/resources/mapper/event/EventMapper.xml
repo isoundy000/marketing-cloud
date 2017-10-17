@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.event.EventDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,code as code,name as name,source_id as sourceId,object_id as objectId,attributes as attributes,status as status,create_time as createTime,update_time as updateTime,system_event as systemEvent,subscribed as subscribed,register_opportunity as registerOpportunity,trigger_opportunity as triggerOpportunity,unsubscribable as unsubscribable]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM event]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="code != null"><![CDATA[ AND code = #{code}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="sourceId != null"><![CDATA[ AND source_id = #{sourceId}]]></if>
+		    	<if test="objectId != null"><![CDATA[ AND object_id = #{objectId}]]></if>
+		    	<if test="attributes != null"><![CDATA[ AND attributes = #{attributes}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="systemEvent != null"><![CDATA[ AND system_event = #{systemEvent}]]></if>
+		    	<if test="subscribed != null"><![CDATA[ AND subscribed = #{subscribed}]]></if>
+		    	<if test="registerOpportunity != null"><![CDATA[ AND register_opportunity = #{registerOpportunity}]]></if>
+		    	<if test="triggerOpportunity != null"><![CDATA[ AND trigger_opportunity = #{triggerOpportunity}]]></if>
+		    	<if test="unsubscribable != null"><![CDATA[ AND unsubscribable = #{unsubscribable}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="code != null"><![CDATA[code = #{code},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="sourceId != null"><![CDATA[source_id = #{sourceId},]]></if>
+		    	<if test="objectId != null"><![CDATA[object_id = #{objectId},]]></if>
+		    	<if test="attributes != null"><![CDATA[attributes = #{attributes},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="systemEvent != null"><![CDATA[system_event = #{systemEvent},]]></if>
+		    	<if test="subscribed != null"><![CDATA[subscribed = #{subscribed},]]></if>
+		    	<if test="registerOpportunity != null"><![CDATA[register_opportunity = #{registerOpportunity},]]></if>
+		    	<if test="triggerOpportunity != null"><![CDATA[trigger_opportunity = #{triggerOpportunity},]]></if>
+		    	<if test="unsubscribable != null"><![CDATA[unsubscribable = #{unsubscribable}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.event.po.Event" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO event (code,name,source_id,object_id,attributes,create_time,system_event,subscribed,register_opportunity,trigger_opportunity,unsubscribable)
+			VALUES
+			(
+			  #{code},
+			  #{name},
+			  #{sourceId},
+			  #{objectId},
+			  #{attributes},
+			  now(),
+			  #{systemEvent},
+			  #{subscribed},
+			  #{registerOpportunity},
+			  #{triggerOpportunity},
+			  #{unsubscribable}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.event.po.Event">
+		<![CDATA[UPDATE event]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.event.po.Event" resultType="cn.rongcapital.mkt.event.po.Event">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.event.po.Event" resultType="cn.rongcapital.mkt.event.po.Event">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.event.po.Event" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<!-- 事件库数量统计 -->
+	<select id="getEventModelCountList"  resultType="cn.rongcapital.mkt.event.vo.EventModelCount">
+		<![CDATA[ 	select count(e.id) as count ,ep.channel from event e, event_source es, event_platform ep 
+			where e.source_id = es.id and es.platform_id = ep.id 
+			and e.status = 0 and es.status = 0 and ep.status = 0 
+			group by ep.channel	
+		]]>
+	</select>
+	<!-- 查询,通过条件 -->
+	<select id="getEvent" parameterType="cn.rongcapital.mkt.event.po.Event" resultType="cn.rongcapital.mkt.event.po.Event">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+</mapper>

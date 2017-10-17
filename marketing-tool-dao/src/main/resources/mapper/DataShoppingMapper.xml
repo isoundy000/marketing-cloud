@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.DataShoppingDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,channel_type as channelType,channel_id as channelId,channel_name as channelName,pay_type as payType,trans_serial as transSerial,order_no as orderNo,trans_time as transTime,product_id as productId,specification as specification,color as color,discount_type as discountType,discount_amt as discountAmt,price as price,amount as amount,inventory as inventory,brand_id as brandId,brand_name as brandName,class1_id as class1Id,class1_name as class1Name,class2_id as class2Id,class2_name as class2Name,class3_id as class3Id,class3_name as class3Name,class4_id as class4Id,class4_name as class4Name,sale_assist_id as saleAssistId,sale_assistance as saleAssistance,settlement_clerk_id as settlementClerkId,settlement_clerk as settlementClerk,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId,order_status as orderStatus,delivery_way as deliveryWay,logistics_status as logisticsStatus,shipping_fee as shippingFee,shipping_way as shippingWay,express_company as expressCompany,express_order as expressOrder,consignee as consignee,consignee_tel as consigneeTel,consignee_addr as consigneeAddr,buyer_comment as buyerComment,wxmp_id as wxmpId,wx_code as wxCode,product_name as productName,bitmap as bitmap,keyid as keyid,create_time as createTime]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_shopping]]></sql>
+
+	<!-- Original需要更新的列 -->
+	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
+		<![CDATA[ channel_type,channel_id,channel_name,pay_type,trans_serial,order_no,trans_time,
+		product_id,specification,color,discount_type,discount_amt,price,amount,inventory,
+		brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,
+		class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,
+		identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,
+		update_time,source,batch_id,order_status,delivery_way,logistics_status,
+		shipping_fee,shipping_way,express_company,express_order,consignee,consignee_tel,consignee_addr,
+		buyer_comment,wxmp_id,wx_code,product_name,bitmap,create_time]]>
+	</sql>
+
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="channelType != null"><![CDATA[ AND channel_type = #{channelType}]]></if>
+		    	<if test="channelId != null"><![CDATA[ AND channel_id = #{channelId}]]></if>
+		    	<if test="channelName != null"><![CDATA[ AND channel_name = #{channelName}]]></if>
+		    	<if test="payType != null"><![CDATA[ AND pay_type = #{payType}]]></if>
+		    	<if test="transSerial != null"><![CDATA[ AND trans_serial = #{transSerial}]]></if>
+		    	<if test="orderNo != null"><![CDATA[ AND order_no = #{orderNo}]]></if>
+		    	<if test="transTime != null"><![CDATA[ AND trans_time = #{transTime}]]></if>
+		    	<if test="productId != null"><![CDATA[ AND product_id = #{productId}]]></if>
+		    	<if test="specification != null"><![CDATA[ AND specification = #{specification}]]></if>
+		    	<if test="color != null"><![CDATA[ AND color = #{color}]]></if>
+		    	<if test="discountType != null"><![CDATA[ AND discount_type = #{discountType}]]></if>
+		    	<if test="discountAmt != null"><![CDATA[ AND discount_amt = #{discountAmt}]]></if>
+		    	<if test="price != null"><![CDATA[ AND price = #{price}]]></if>
+		    	<if test="amount != null"><![CDATA[ AND amount = #{amount}]]></if>
+		    	<if test="inventory != null"><![CDATA[ AND inventory = #{inventory}]]></if>
+		    	<if test="brandId != null"><![CDATA[ AND brand_id = #{brandId}]]></if>
+		    	<if test="brandName != null"><![CDATA[ AND brand_name = #{brandName}]]></if>
+		    	<if test="class1Id != null"><![CDATA[ AND class1_id = #{class1Id}]]></if>
+		    	<if test="class1Name != null"><![CDATA[ AND class1_name = #{class1Name}]]></if>
+		    	<if test="class2Id != null"><![CDATA[ AND class2_id = #{class2Id}]]></if>
+		    	<if test="class2Name != null"><![CDATA[ AND class2_name = #{class2Name}]]></if>
+		    	<if test="class3Id != null"><![CDATA[ AND class3_id = #{class3Id}]]></if>
+		    	<if test="class3Name != null"><![CDATA[ AND class3_name = #{class3Name}]]></if>
+		    	<if test="class4Id != null"><![CDATA[ AND class4_id = #{class4Id}]]></if>
+		    	<if test="class4Name != null"><![CDATA[ AND class4_name = #{class4Name}]]></if>
+		    	<if test="saleAssistId != null"><![CDATA[ AND sale_assist_id = #{saleAssistId}]]></if>
+		    	<if test="saleAssistance != null"><![CDATA[ AND sale_assistance = #{saleAssistance}]]></if>
+		    	<if test="settlementClerkId != null"><![CDATA[ AND settlement_clerk_id = #{settlementClerkId}]]></if>
+		    	<if test="settlementClerk != null"><![CDATA[ AND settlement_clerk = #{settlementClerk}]]></if>
+		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
+		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
+		    	<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
+		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="orderStatus != null"><![CDATA[ AND order_status = #{orderStatus}]]></if>
+		    	<if test="deliveryWay != null"><![CDATA[ AND delivery_way = #{deliveryWay}]]></if>
+		    	<if test="logisticsStatus != null"><![CDATA[ AND logistics_status = #{logisticsStatus}]]></if>
+		    	<if test="shippingFee != null"><![CDATA[ AND shipping_fee = #{shippingFee}]]></if>
+		    	<if test="shippingWay != null"><![CDATA[ AND shipping_way = #{shippingWay}]]></if>
+		    	<if test="expressCompany != null"><![CDATA[ AND express_company = #{expressCompany}]]></if>
+		    	<if test="expressOrder != null"><![CDATA[ AND express_order = #{expressOrder}]]></if>
+		    	<if test="consignee != null"><![CDATA[ AND consignee = #{consignee}]]></if>
+		    	<if test="consigneeTel != null"><![CDATA[ AND consignee_tel = #{consigneeTel}]]></if>
+		    	<if test="consigneeAddr != null"><![CDATA[ AND consignee_addr = #{consigneeAddr}]]></if>
+		    	<if test="buyerComment != null"><![CDATA[ AND buyer_comment = #{buyerComment}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
+		    	<if test="productName != null"><![CDATA[ AND product_name = #{productName}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="channelType != null"><![CDATA[channel_type = #{channelType},]]></if>
+		    	<if test="channelId != null"><![CDATA[channel_id = #{channelId},]]></if>
+		    	<if test="channelName != null"><![CDATA[channel_name = #{channelName},]]></if>
+		    	<if test="payType != null"><![CDATA[pay_type = #{payType},]]></if>
+		    	<if test="transSerial != null"><![CDATA[trans_serial = #{transSerial},]]></if>
+		    	<if test="orderNo != null"><![CDATA[order_no = #{orderNo},]]></if>
+		    	<if test="transTime != null"><![CDATA[trans_time = #{transTime},]]></if>
+		    	<if test="productId != null"><![CDATA[product_id = #{productId},]]></if>
+		    	<if test="specification != null"><![CDATA[specification = #{specification},]]></if>
+		    	<if test="color != null"><![CDATA[color = #{color},]]></if>
+		    	<if test="discountType != null"><![CDATA[discount_type = #{discountType},]]></if>
+		    	<if test="discountAmt != null"><![CDATA[discount_amt = #{discountAmt},]]></if>
+		    	<if test="price != null"><![CDATA[price = #{price},]]></if>
+		    	<if test="amount != null"><![CDATA[amount = #{amount},]]></if>
+		    	<if test="inventory != null"><![CDATA[inventory = #{inventory},]]></if>
+		    	<if test="brandId != null"><![CDATA[brand_id = #{brandId},]]></if>
+		    	<if test="brandName != null"><![CDATA[brand_name = #{brandName},]]></if>
+		    	<if test="class1Id != null"><![CDATA[class1_id = #{class1Id},]]></if>
+		    	<if test="class1Name != null"><![CDATA[class1_name = #{class1Name},]]></if>
+		    	<if test="class2Id != null"><![CDATA[class2_id = #{class2Id},]]></if>
+		    	<if test="class2Name != null"><![CDATA[class2_name = #{class2Name},]]></if>
+		    	<if test="class3Id != null"><![CDATA[class3_id = #{class3Id},]]></if>
+		    	<if test="class3Name != null"><![CDATA[class3_name = #{class3Name},]]></if>
+		    	<if test="class4Id != null"><![CDATA[class4_id = #{class4Id},]]></if>
+		    	<if test="class4Name != null"><![CDATA[class4_name = #{class4Name},]]></if>
+		    	<if test="saleAssistId != null"><![CDATA[sale_assist_id = #{saleAssistId},]]></if>
+		    	<if test="saleAssistance != null"><![CDATA[sale_assistance = #{saleAssistance},]]></if>
+		    	<if test="settlementClerkId != null"><![CDATA[settlement_clerk_id = #{settlementClerkId},]]></if>
+		    	<if test="settlementClerk != null"><![CDATA[settlement_clerk = #{settlementClerk},]]></if>
+		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
+		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
+		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
+		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+		    	<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
+		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="orderStatus != null"><![CDATA[order_status = #{orderStatus},]]></if>
+		    	<if test="deliveryWay != null"><![CDATA[delivery_way = #{deliveryWay},]]></if>
+		    	<if test="logisticsStatus != null"><![CDATA[logistics_status = #{logisticsStatus},]]></if>
+		    	<if test="shippingFee != null"><![CDATA[shipping_fee = #{shippingFee},]]></if>
+		    	<if test="shippingWay != null"><![CDATA[shipping_way = #{shippingWay},]]></if>
+		    	<if test="expressCompany != null"><![CDATA[express_company = #{expressCompany},]]></if>
+		    	<if test="expressOrder != null"><![CDATA[express_order = #{expressOrder},]]></if>
+		    	<if test="consignee != null"><![CDATA[consignee = #{consignee},]]></if>
+		    	<if test="consigneeTel != null"><![CDATA[consignee_tel = #{consigneeTel},]]></if>
+		    	<if test="consigneeAddr != null"><![CDATA[consignee_addr = #{consigneeAddr},]]></if>
+		    	<if test="buyerComment != null"><![CDATA[buyer_comment = #{buyerComment},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode},]]></if>
+		    	<if test="productName != null"><![CDATA[product_name = #{productName},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataShopping" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO data_shopping (channel_type,channel_id,channel_name,pay_type,trans_serial,order_no,trans_time,product_id,specification,color,discount_type,discount_amt,price,amount,inventory,brand_id,brand_name,class1_id,class1_name,class2_id,class2_name,class3_id,class3_name,class4_id,class4_name,sale_assist_id,sale_assistance,settlement_clerk_id,settlement_clerk,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,source,batch_id,order_status,delivery_way,logistics_status,shipping_fee,shipping_way,express_company,express_order,consignee,consignee_tel,consignee_addr,buyer_comment,wxmp_id,wx_code,product_name,bitmap,keyid,create_time)
+			VALUES
+			(
+			  #{channelType},
+			  #{channelId},
+			  #{channelName},
+			  #{payType},
+			  #{transSerial},
+			  #{orderNo},
+			  #{transTime},
+			  #{productId},
+			  #{specification},
+			  #{color},
+			  #{discountType},
+			  #{discountAmt},
+			  #{price},
+			  #{amount},
+			  #{inventory},
+			  #{brandId},
+			  #{brandName},
+			  #{class1Id},
+			  #{class1Name},
+			  #{class2Id},
+			  #{class2Name},
+			  #{class3Id},
+			  #{class3Name},
+			  #{class4Id},
+			  #{class4Name},
+			  #{saleAssistId},
+			  #{saleAssistance},
+			  #{settlementClerkId},
+			  #{settlementClerk},
+			  #{identifyNo},
+			  #{drivingLicense},
+			  #{email},
+			  #{mobile},
+			  #{tel},
+			  #{qq},
+			  #{acctType},
+			  #{acctNo},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
+			  #{phoneMac},
+			  #{source},
+			  #{batchId},
+			  #{orderStatus},
+			  #{deliveryWay},
+			  #{logisticsStatus},
+			  #{shippingFee},
+			  #{shippingWay},
+			  #{expressCompany},
+			  #{expressOrder},
+			  #{consignee},
+			  #{consigneeTel},
+			  #{consigneeAddr},
+			  #{buyerComment},
+			  #{wxmpId},
+			  #{wxCode},
+			  #{productName},
+			  #{bitmap},
+			  #{keyid},
+			  now()
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.DataShopping">
+		<![CDATA[UPDATE data_shopping]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<update id="updateStatusByIds">
+		update data_shopping set status = #{status}
+		where id in
+		<foreach collection="list" item="idItem" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.DataShopping" resultType="cn.rongcapital.mkt.po.DataShopping">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.DataShopping" resultType="cn.rongcapital.mkt.po.DataShopping">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DataShopping" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+
+	<!-- 根据taskId查询相关数据 -->
+	<select id="selectByBatchId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataShopping">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<!-- <if test="timeCondition != null">
+			<![CDATA[AND trans_time > #{timeCondition}]]>
+		</if>
+		order by trans_time DESC -->
+		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
+	</select>
+
+	<select id="selectMappingKeyId" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1 and keyid is not null
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<!-- <if test="timeCondition != null">
+		这个值在数据库里根本都没被赋值.
+			<![CDATA[AND trans_time > #{timeCondition}]]>
+		</if>
+		order by trans_time DESC -->
+		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
+	</select>
+
+	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<![CDATA[SELECT]]>
+		COUNT(1)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<!-- <if test="timeCondition != null">
+			<![CDATA[AND trans_time > #{timeCondition}]]>
+		</if> -->
+	</select>
+
+	<select id="selectColumns" resultType="java.lang.String">
+		SELECT
+			COLUMN_NAME
+		FROM
+			information_schema.columns
+		WHERE
+			table_name='data_shopping'
+	</select>
+
+	<update id="cleanAndUpdateByOriginal" parameterType="map">
+		<![CDATA[INSERT INTO data_shopping]]>
+		(
+		<include refid="ORIGINAL_CLEAN_COLUMN_LIST" />
+		)
+		values
+
+		<foreach collection="list" item="obj" index="index" separator=",">
+			( #{obj.channelType}, #{obj.channelId},#{obj.channelName},#{obj.payType},
+			#{obj.transSerial}, #{obj.orderNo},#{obj.transTime}, #{obj.productId},
+			#{obj.specification}, #{obj.color}, #{obj.discountType},#{obj.discountAmt},
+			#{obj.price},#{obj.amount},#{obj.inventory},#{obj.brandId},
+			#{obj.brandName},#{obj.class1Id},#{obj.class1Name},#{obj.class2Id},#{obj.class2Name},
+			#{obj.class3Id},#{obj.class3Name},#{obj.class4Id},#{obj.class4Name},#{obj.saleAssistId},
+			#{obj.saleAssistance},#{obj.settlementClerkId},#{obj.settlementClerk},#{obj.identifyNo},
+			#{obj.drivingLicense},#{obj.email},#{obj.mobile},#{obj.tel},#{obj.qq},#{obj.acctType},
+			#{obj.acctNo},#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.updateTime},
+			#{obj.source},#{obj.batchId},#{obj.orderStatus},#{obj.deliveryWay},#{obj.logisticsStatus},
+			#{obj.shippingFee},#{obj.shippingWay},#{obj.expressCompany},#{obj.expressOrder},
+			#{obj.consignee},#{obj.consigneeTel},#{obj.consigneeAddr},#{obj.buyerComment},
+			#{obj.wxmpId},#{obj.wxCode},#{obj.productName},#{obj.bitmap},#{obj.createTime})
+		</foreach>
+		on duplicate key update
+		order_no = values(order_no)
+	</update>
+
+	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+
+	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataShopping">
+		SELECT <include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+
+	<select id="selectListByWxData" parameterType="cn.rongcapital.mkt.po.DataShopping" resultType="cn.rongcapital.mkt.po.OrderCount">
+		SELECT count(id) as orderCount,mobile
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE status = #{status}
+		GROUP BY wxmp_id,wx_code
+	</select>
+
+	<select id="selectListByLastTransTimeandWeChatInfo" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
+		SELECT trans_time as lastShoppingTime ,wxmp_id as pubId , wx_code as openId  FROM (
+			SELECT trans_time, wxmp_id, wx_code
+			FROM data_shopping ORDER BY trans_time
+		) AS orderedTable GROUP BY wxmp_id , wx_code;
+	</select>
+
+	<select id="selectTotalShoppingCountByWeChatInfo" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
+		SELECT COUNT(id) as totalShoppingCount ,wxmp_id as pubId , wx_code as openId  FROM data_shopping
+			GROUP BY wxmp_id , wx_code;
+	</select>
+
+	<select id="selectSingleMonthShoppingCountByWeChatInfo" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
+		<![CDATA[
+		SELECT COUNT(id) as singleMonthShoppingCount ,wxmp_id as pubId , wx_code as openId  FROM data_shopping
+			GROUP BY wxmp_id , wx_code;
+		]]>
+		<!-- 该sql不用了, 不知道以后会不会启用 -->
+	<!-- WHERE trans_time > DATE_ADD(curdate(),interval -day(curdate())+1 day) AND
+	trans_time < DATE_ADD(curdate()-day(curdate())+1,interval 1 month) -->
+	</select>
+
+	<select id="selectAllDataByWeimob" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
+		SELECT
+		    wxmp_id AS pubId,
+		    wx_code AS openId,
+		    CASE channel_name
+		        WHEN '官网' THEN '旺铺'
+		        WHEN '分销' THEN '其他'
+		    END AS weimob
+		FROM
+		    data_shopping
+		WHERE
+		    channel_type = '微盟';
+	</select>
+
+	<select id="selectAllDataByWechatInfo" resultType="cn.rongcapital.mkt.po.ShoppingWechat">
+		SELECT
+		    wxmp_id AS pubId,
+		    wx_code AS openId,
+		    order_status AS orderStatus
+		FROM
+		    data_shopping
+		WHERE
+		    wxmp_id is not null and wx_code is not null and order_status is not null;
+	</select>
+	
+	<!-- 查询单个微信用户最后一次购买时间 -->
+	<select id="selectLastTransTimeByKeyid" resultType="java.util.Date" parameterType="java.lang.Integer">
+		SELECT
+			MAX(trans_time)
+		FROM
+			data_shopping
+		WHERE
+			keyid = #{keyId}
+	</select>
+	
+	<!-- 查询单个微信用户购买总次数 -->
+	<select id="selectTotalShoppingCountByKeyid" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			data_shopping
+		WHERE
+			keyid = #{keyId}
+	</select>
+	
+	<!-- 查询单个微信用户交易渠道偏好 -->
+	<select id="selectWeimobByKeyid" resultType="cn.rongcapital.mkt.po.ShoppingWechat" parameterType="java.lang.Integer">
+		SELECT
+			CASE channel_name 
+		WHEN '官网' THEN '旺铺'
+		WHEN '分销' THEN '其他'
+		END AS weimob
+		FROM data_shopping
+		WHERE channel_type = '微盟'
+		AND keyid = #{keyId}
+		GROUP BY channel_name
+	</select>
+	
+	<!-- 查询单个微信用户单月交易数量 -->
+	<select id="selectSingleMonthShoppingCountByKeyid" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			data_shopping
+		WHERE
+			keyid = #{keyId}
+		AND <![CDATA[DATE_FORMAT(trans_time, '%Y-%m-%d') BETWEEN DATE_ADD(CURRENT_DATE (),INTERVAL - 1 MONTH) AND CURRENT_DATE ()]]>
+	</select>
+	
+	<!-- 查询单个微信用户订单状态 -->
+	<select id="selectOrderStatusByKeyid" resultType="cn.rongcapital.mkt.po.ShoppingWechat"  parameterType="java.lang.Integer">
+		SELECT
+			order_status AS orderStatus
+		FROM
+			data_shopping
+		WHERE wxmp_id IS NOT NULL
+		AND wx_code IS NOT NULL
+		AND order_status IS NOT NULL
+		AND  keyid = #{keyId}
+		GROUP BY order_status
+	</select>
+	
+	
+		<!-- 查询人口对应主数据id(需要去重) -->
+	<select id="selectMappingKeyIds" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		DISTINCT keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1 and keyid is not null
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
+	
+	<!-- 计算人口数量 -->
+	<select id="getAudiencesCount" parameterType="java.util.Map" resultType="int">
+		<![CDATA[SELECT]]>
+			count(id) as data_shopping_rows
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE 1=1]]> 
+				
+		<if test="contactIdList != null">
+			<foreach collection="contactIdList" item="contactId">
+				<if test="contactId != null and contactId == 1">
+					<![CDATA[AND mobile is not null]]>
+				</if>
+				<if test="contactId != null and contactId == 2">
+					<![CDATA[AND email is not null]]>
+				</if>
+			</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
+	
+	<!-- 修改keyid -->
+	<update id="updateDataShoppingKeyid" parameterType="Map">
+		<![CDATA[UPDATE data_shopping SET keyid = #{newkeyId} WHERE keyid = #{oldkeyId}]]>
+	</update>
+</mapper>

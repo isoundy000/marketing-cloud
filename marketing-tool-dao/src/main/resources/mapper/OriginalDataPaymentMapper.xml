@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.OriginalDataPaymentDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,pay_channel as payChannel,pay_acct as payAcct,pay_serial as paySerial,trans_serial as transSerial,order_no as orderNo,product_name as productName,create_time as createTime,complete_time as completeTime,pay_status as payStatus,counter_acct as counterAcct,income_amt as incomeAmt,paid_amt as paidAmt,acct_amt as acctAmt,comments as comments,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,update_time as updateTime,source as source,batch_id as batchId,file_unique as fileUnique,wxmp_id as wxmpId,wx_code as wxCode,bitmap as bitmap]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM original_data_payment]]></sql>
+
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+			<if test="payChannel != null"><![CDATA[ AND pay_channel = #{payChannel}]]></if>
+			<if test="payAcct != null"><![CDATA[ AND pay_acct = #{payAcct}]]></if>
+			<if test="paySerial != null"><![CDATA[ AND pay_serial = #{paySerial}]]></if>
+			<if test="transSerial != null"><![CDATA[ AND trans_serial = #{transSerial}]]></if>
+			<if test="orderNo != null"><![CDATA[ AND order_no = #{orderNo}]]></if>
+			<if test="productName != null"><![CDATA[ AND product_name = #{productName}]]></if>
+			<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+			<if test="completeTime != null"><![CDATA[ AND complete_time = #{completeTime}]]></if>
+			<if test="payStatus != null"><![CDATA[ AND pay_status = #{payStatus}]]></if>
+			<if test="counterAcct != null"><![CDATA[ AND counter_acct = #{counterAcct}]]></if>
+			<if test="incomeAmt != null"><![CDATA[ AND income_amt = #{incomeAmt}]]></if>
+			<if test="paidAmt != null"><![CDATA[ AND paid_amt = #{paidAmt}]]></if>
+			<if test="acctAmt != null"><![CDATA[ AND acct_amt = #{acctAmt}]]></if>
+			<if test="comments != null"><![CDATA[ AND comments = #{comments}]]></if>
+			<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
+			<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
+			<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+			<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+			<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
+			<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+			<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
+			<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
+			<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+			<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
+			<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
+			<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
+			<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+			<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+			<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+			<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+			<if test="fileUnique != null"><![CDATA[ AND file_unique = #{fileUnique}]]></if>
+			<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+			<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
+			<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		</where>
+	</sql>
+
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="payChannel != null"><![CDATA[pay_channel = #{payChannel},]]></if>
+			<if test="payAcct != null"><![CDATA[pay_acct = #{payAcct},]]></if>
+			<if test="paySerial != null"><![CDATA[pay_serial = #{paySerial},]]></if>
+			<if test="transSerial != null"><![CDATA[trans_serial = #{transSerial},]]></if>
+			<if test="orderNo != null"><![CDATA[order_no = #{orderNo},]]></if>
+			<if test="productName != null"><![CDATA[product_name = #{productName},]]></if>
+			<if test="completeTime != null"><![CDATA[complete_time = #{completeTime},]]></if>
+			<if test="payStatus != null"><![CDATA[pay_status = #{payStatus},]]></if>
+			<if test="counterAcct != null"><![CDATA[counter_acct = #{counterAcct},]]></if>
+			<if test="incomeAmt != null"><![CDATA[income_amt = #{incomeAmt},]]></if>
+			<if test="paidAmt != null"><![CDATA[paid_amt = #{paidAmt},]]></if>
+			<if test="acctAmt != null"><![CDATA[acct_amt = #{acctAmt},]]></if>
+			<if test="comments != null"><![CDATA[comments = #{comments},]]></if>
+			<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
+			<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
+			<if test="email != null"><![CDATA[email = #{email},]]></if>
+			<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+			<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
+			<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+			<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
+			<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
+			<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+			<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+			<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
+			<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
+			<if test="status != null"><![CDATA[status = #{status},]]></if>
+			<if test="source != null"><![CDATA[source = #{source},]]></if>
+			<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+			<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique},]]></if>
+			<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+			<if test="wxCode != null"><![CDATA[wx_code = #{wxCode},]]></if>
+			<if test="bitmap != null"><![CDATA[bitmap = #{bitmap}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.OriginalDataPayment" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO original_data_payment (pay_channel,pay_acct,pay_serial,trans_serial,order_no,product_name,create_time,complete_time,pay_status,counter_acct,income_amt,paid_amt,acct_amt,comments,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,source,batch_id,file_unique,wxmp_id,wx_code,bitmap)
+			VALUES
+			(
+			  #{payChannel},
+			  #{payAcct},
+			  #{paySerial},
+			  #{transSerial},
+			  #{orderNo},
+			  #{productName},
+			  now(),
+			  #{completeTime},
+			  #{payStatus},
+			  #{counterAcct},
+			  #{incomeAmt},
+			  #{paidAmt},
+			  #{acctAmt},
+			  #{comments},
+			  #{identifyNo},
+			  #{drivingLicense},
+			  #{email},
+			  #{mobile},
+			  #{tel},
+			  #{qq},
+			  #{acctType},
+			  #{acctNo},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
+			  #{phoneMac},
+			  #{source},
+			  #{batchId},
+			  #{fileUnique},
+			  #{wxmpId},
+			  #{wxCode},
+			  #{bitmap}
+			)
+		]]>
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.OriginalDataPayment">
+		<![CDATA[UPDATE original_data_payment]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.OriginalDataPayment" resultType="cn.rongcapital.mkt.po.OriginalDataPayment">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.OriginalDataPayment" resultType="cn.rongcapital.mkt.po.OriginalDataPayment">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.OriginalDataPayment" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<insert id="batchInsertUploadFileData" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO original_data_payment (pay_channel,pay_acct,pay_serial,trans_serial,
+			order_no,product_name,complete_time,pay_status,counter_acct,
+			income_amt,paid_amt,acct_amt,comments,identify_no,driving_license,email,mobile,tel,qq,
+			acct_type,acct_no,idfa,imei,udid,phone_mac,status,source,file_unique,batch_id,wxmp_id,wx_code,create_time,bitmap)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator="," >
+			(
+			#{item.pay_channel},
+			#{item.pay_acct},
+			#{item.pay_serial},
+			#{item.trans_serial},
+			#{item.order_no},
+			#{item.product_name},
+			#{item.complete_time,jdbcType=TIMESTAMP},
+			#{item.pay_status},
+			#{item.counter_acct},
+			#{item.income_amt},
+			#{item.paid_amt},
+			#{item.acct_amt},
+			#{item.comments},
+			#{item.identify_no},
+			#{item.driving_license},
+			#{item.email},
+			#{item.mobile},
+			#{item.tel},
+			#{item.qq},
+			#{item.acct_type},
+			#{item.acct_no},
+			#{item.idfa},
+			#{item.imei},
+			#{item.udid},
+			#{item.phone_mac},
+			#{item.status},
+			#{item.source},
+			#{item.file_unique},
+			#{item.batch_id},
+			#{item.wxmp_id},
+			#{item.wx_code},
+			now(),
+			#{item.bitmap}
+			)
+		</foreach>
+	</insert>
+
+	<select id="selelctIdListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE file_unique = #{file_unique}
+	</select>
+
+	<select id="selelctIdentifierListByFileUnique" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE file_unique = #{file_unique}
+	</select>
+
+	<update id="updateStatusByFileUnique">
+		update original_data_payment set status = #{status} where file_unique = #{fileUnique}
+	</update>
+</mapper>

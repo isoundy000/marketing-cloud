@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.ImportDataHistoryDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,name as name,import_start_time as importStartTime,import_end_time as importEndTime,total_rows as totalRows,legal_rows as legalRows,success as success,source as source,source_filename as sourceFilename,download_filename as downloadFilename,email_rows as emailRows,mobile_rows as mobileRows,duplicate_rows as duplicateRows,illegal_rows as illegalRows,summary as summary,no_recognize_property as noRecognizeProperty,file_unique as fileUnique,status as status,create_time as createTime,update_time as updateTime,file_type as fileType]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM import_data_history]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="importStartTime != null"><![CDATA[ AND import_start_time = #{importStartTime}]]></if>
+		    	<if test="importEndTime != null"><![CDATA[ AND import_end_time = #{importEndTime}]]></if>
+		    	<if test="totalRows != null"><![CDATA[ AND total_rows = #{totalRows}]]></if>
+		    	<if test="legalRows != null"><![CDATA[ AND legal_rows = #{legalRows}]]></if>
+		    	<if test="success != null"><![CDATA[ AND success = #{success}]]></if>
+		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="sourceFilename != null"><![CDATA[ AND source_filename = #{sourceFilename}]]></if>
+		    	<if test="downloadFilename != null"><![CDATA[ AND download_filename = #{downloadFilename}]]></if>
+		    	<if test="emailRows != null"><![CDATA[ AND email_rows = #{emailRows}]]></if>
+		    	<if test="mobileRows != null"><![CDATA[ AND mobile_rows = #{mobileRows}]]></if>
+		    	<if test="duplicateRows != null"><![CDATA[ AND duplicate_rows = #{duplicateRows}]]></if>
+		    	<if test="illegalRows != null"><![CDATA[ AND illegal_rows = #{illegalRows}]]></if>
+		    	<if test="summary != null"><![CDATA[ AND summary = #{summary}]]></if>
+		    	<if test="noRecognizeProperty != null"><![CDATA[ AND no_recognize_property = #{noRecognizeProperty}]]></if>
+		    	<if test="fileUnique != null"><![CDATA[ AND file_unique = #{fileUnique}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="fileType != null"><![CDATA[ AND file_type = #{fileType}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="importStartTime != null"><![CDATA[import_start_time = #{importStartTime},]]></if>
+		    	<if test="importEndTime != null"><![CDATA[import_end_time = #{importEndTime},]]></if>
+		    	<if test="totalRows != null"><![CDATA[total_rows = #{totalRows},]]></if>
+		    	<if test="legalRows != null"><![CDATA[legal_rows = #{legalRows},]]></if>
+		    	<if test="success != null"><![CDATA[success = #{success},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="sourceFilename != null"><![CDATA[source_filename = #{sourceFilename},]]></if>
+		    	<if test="downloadFilename != null"><![CDATA[download_filename = #{downloadFilename},]]></if>
+		    	<if test="emailRows != null"><![CDATA[email_rows = #{emailRows},]]></if>
+		    	<if test="mobileRows != null"><![CDATA[mobile_rows = #{mobileRows},]]></if>
+		    	<if test="duplicateRows != null"><![CDATA[duplicate_rows = #{duplicateRows},]]></if>
+		    	<if test="illegalRows != null"><![CDATA[illegal_rows = #{illegalRows},]]></if>
+		    	<if test="summary != null"><![CDATA[summary = #{summary},]]></if>
+		    	<if test="noRecognizeProperty != null"><![CDATA[no_recognize_property = #{noRecognizeProperty},]]></if>
+		    	<if test="fileUnique != null"><![CDATA[file_unique = #{fileUnique},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="fileType != null"><![CDATA[file_type = #{fileType}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.ImportDataHistory" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO import_data_history (name,import_start_time,import_end_time,total_rows,legal_rows,success,source,source_filename,download_filename,email_rows,mobile_rows,duplicate_rows,illegal_rows,summary,no_recognize_property,file_unique,create_time,file_type)
+			VALUES
+			(
+			  #{name},
+			  #{importStartTime},
+			  #{importEndTime},
+			  #{totalRows},
+			  #{legalRows},
+			  #{success},
+			  #{source},
+			  #{sourceFilename},
+			  #{downloadFilename},
+			  #{emailRows},
+			  #{mobileRows},
+			  #{duplicateRows},
+			  #{illegalRows},
+			  #{summary},
+			  #{noRecognizeProperty},
+			  #{fileUnique},
+			  now(),
+			  #{fileType}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.ImportDataHistory">
+		<![CDATA[UPDATE import_data_history]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.ImportDataHistory" resultType="cn.rongcapital.mkt.po.ImportDataHistory">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.ImportDataHistory" resultType="cn.rongcapital.mkt.po.ImportDataHistory">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.ImportDataHistory" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	
+	<select id="queryByFileUnique"  resultType="cn.rongcapital.mkt.po.ImportDataHistory">
+		SELECT
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		where file_unique = #{fileUnique} limit 1
+	</select>
+	
+	<!-- 查询复合来源表-->
+	<sql id="QUERY_FROM_UNION_LOG_TABLE"><![CDATA[FROM import_data_history left join import_data_modify_log on 1=1 where status=0]]></sql>
+	
+	<select id="selectMigrationFileGeneralInfo" resultType="java.util.Map">
+		SELECT
+		sum(total_rows) as total_rows, max(import_end_time) as import_end_time
+		<include refid="QUERY_FROM_TABLE" />
+		WHERE status = 0
+	</select>
+
+	<select id="selectQualityCount" resultType="java.util.Map">
+		SELECT
+		SUM(import_data_history.total_rows) as total_rows,
+		SUM(import_data_history.illegal_rows) as issue_rows,
+		SUM(import_data_modify_log.modify_rows) as modified_rows
+		<include refid="QUERY_FROM_UNION_LOG_TABLE" />
+	</select>
+
+	<select id="selectUnqualifiedCount" parameterType="cn.rongcapital.mkt.po.ImportDataHistory" resultType="java.util.Map">
+		SELECT
+		mobile_rows , email_rows , duplicate_rows
+		<include refid="QUERY_FROM_TABLE" />
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<insert id="insertFileUnique" parameterType="java.util.Map">
+		INSERT into import_data_history (import_start_time,file_unique,status)
+		VALUES (#{import_start_time},#{file_unique},#{status})
+	</insert>
+
+	<select id="selectTotalRowsAndFileType" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT legal_rows,file_type
+		<include refid="QUERY_FROM_TABLE" />
+        WHERE file_unique = #{file_unique}
+	</select>
+
+	<select id="selectColumns" resultType="java.lang.String">
+		SELECT 
+			COLUMN_NAME 
+		FROM 
+			information_schema.columns 
+		WHERE 
+			table_name='import_data_history'
+	</select>
+	
+</mapper>

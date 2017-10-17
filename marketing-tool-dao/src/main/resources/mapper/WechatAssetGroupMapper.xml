@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.WechatAssetGroupDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,import_group_id as importGroupId,name as name,members as members,wx_acct as wxAcct,is_sys_group as isSysGroup,asset_id as assetId,status as status,create_time as createTime,update_time as updateTime]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM wechat_asset_group]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="importGroupId != null"><![CDATA[ AND import_group_id = #{importGroupId}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="members != null"><![CDATA[ AND members = #{members}]]></if>
+		    	<if test="wxAcct != null"><![CDATA[ AND wx_acct = #{wxAcct}]]></if>
+		    	<if test="isSysGroup != null"><![CDATA[ AND is_sys_group = #{isSysGroup}]]></if>
+		    	<if test="assetId != null"><![CDATA[ AND asset_id = #{assetId}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="importGroupId != null"><![CDATA[import_group_id = #{importGroupId},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="members != null"><![CDATA[members = #{members},]]></if>
+		    	<if test="wxAcct != null"><![CDATA[wx_acct = #{wxAcct},]]></if>
+		    	<if test="isSysGroup != null"><![CDATA[is_sys_group = #{isSysGroup},]]></if>
+		    	<if test="assetId != null"><![CDATA[asset_id = #{assetId},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO wechat_asset_group (import_group_id,name,members,wx_acct,is_sys_group,asset_id,create_time)
+			VALUES
+			(
+			  #{importGroupId},
+			  #{name},
+			  #{members},
+			  #{wxAcct},
+			  #{isSysGroup},
+			  #{assetId},
+			  now()
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup">
+		<![CDATA[UPDATE wechat_asset_group]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" resultType="cn.rongcapital.mkt.po.WechatAssetGroup">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" resultType="cn.rongcapital.mkt.po.WechatAssetGroup">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	<select id="selectGroupById" parameterType="java.lang.String" resultType="java.util.Map">
+		SELECT
+		id as group_id,name,members
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id = #{id}
+	</select>	
+
+	<select id="sumGroupMemberCount" parameterType="java.util.List" resultType="java.lang.Long">
+		SELECT sum(members)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectImportGroupIdsByIds" parameterType="java.util.List" resultType="java.lang.Long">
+		SELECT import_group_id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id in
+		<foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<select id="selectImportGroupsByIds" parameterType="java.util.List" resultType="cn.rongcapital.mkt.po.WechatAssetGroup">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>	
+
+	<select id="selectImportGroupIds" resultType="java.lang.Long">
+		SELECT import_group_id
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE import_group_id > 0
+	</select>
+
+	<insert id="insertNewGroupList" parameterType="java.util.List">
+		INSERT INTO wechat_asset_group(import_group_id,name,wx_acct)
+		VALUES
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			   #{item.import_group_id},
+			   #{item.name},
+			   #{item.wx_acct}
+			)
+		</foreach>
+	</insert>
+
+	<update id="updateGroupCountById" parameterType="java.util.Map">
+		UPDATE wechat_asset_group
+		SET members = #{members}
+		WHERE import_group_id = #{import_group_id}
+	</update>
+
+	<select id="selectGroupIdsByWxAcct" parameterType="java.util.Map" resultType="java.lang.Long">
+		SELECT id
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE wx_acct = #{wx_acct}
+	</select>
+
+	<select id="selectMemberCountByWxAcct" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT sum(members)
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE wx_acct = #{wx_acct}
+	</select>
+
+	<delete id="deleteRecordByUin" parameterType="java.lang.String">
+		DELETE
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE wx_acct = #{uin}
+	</delete>
+
+	<select id="selectCountByGroupId" parameterType="java.util.List" resultType="java.lang.Integer">
+		SELECT sum(members)
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id in
+		<foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="selectFriendCount" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup" resultType="java.lang.Integer">
+		SELECT sum(members)
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE name = #{name}
+	</select>
+	
+	<update id="updateByWxacctIGroupId" parameterType="cn.rongcapital.mkt.po.WechatAssetGroup">
+		<![CDATA[UPDATE wechat_asset_group]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE wx_acct = #{wxAcct} and import_group_id = #{importGroupId}]]>
+	</update>
+</mapper>

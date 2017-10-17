@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.DataMemberDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,member_id as memberId,member_points as memberPoints,member_level as memberLevel,regist_time as registTime,card_amt as cardAmt,expire as expire,identify_no as identifyNo,driving_license as drivingLicense,email as email,mobile as mobile,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid,wxmp_id as wxmpId,wx_code as wxCode]]>
+	</sql>
+
+	<!-- 用于批量更新的列 -->
+	<sql id="ORIGINAL_CLEAN_COLUMN_LIST">
+		<![CDATA[ member_id,member_points ,member_level,regist_time,card_amt ,expire,identify_no,driving_license ,email ,mobile ,tel ,qq ,acct_type,acct_no,idfa ,imei ,udid,phone_mac,status ,create_time ,update_time ,source,batch_id,bitmap,keyid,wxmp_id,wx_code]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_member]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="memberId != null"><![CDATA[ AND member_id = #{memberId}]]></if>
+		    	<if test="memberPoints != null"><![CDATA[ AND member_points = #{memberPoints}]]></if>
+		    	<if test="memberLevel != null"><![CDATA[ AND member_level = #{memberLevel}]]></if>
+		    	<if test="registTime != null"><![CDATA[ AND regist_time = #{registTime}]]></if>
+		    	<if test="cardAmt != null"><![CDATA[ AND card_amt = #{cardAmt}]]></if>
+		    	<if test="expire != null"><![CDATA[ AND expire = #{expire}]]></if>
+		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
+		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
+		    	<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
+		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="memberId != null"><![CDATA[member_id = #{memberId},]]></if>
+		    	<if test="memberPoints != null"><![CDATA[member_points = #{memberPoints},]]></if>
+		    	<if test="memberLevel != null"><![CDATA[member_level = #{memberLevel},]]></if>
+		    	<if test="registTime != null"><![CDATA[regist_time = #{registTime},]]></if>
+		    	<if test="cardAmt != null"><![CDATA[card_amt = #{cardAmt},]]></if>
+		    	<if test="expire != null"><![CDATA[expire = #{expire},]]></if>
+		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
+		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
+		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
+		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+		    	<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
+		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataMember" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO data_member (member_id,member_points,member_level,regist_time,card_amt,expire,identify_no,driving_license,email,mobile,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code)
+			VALUES
+			(
+			  #{memberId},
+			  #{memberPoints},
+			  #{memberLevel},
+			  #{registTime},
+			  #{cardAmt},
+			  #{expire},
+			  #{identifyNo},
+			  #{drivingLicense},
+			  #{email},
+			  #{mobile},
+			  #{tel},
+			  #{qq},
+			  #{acctType},
+			  #{acctNo},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
+			  #{phoneMac},
+			  now(),
+			  #{source},
+			  #{batchId},
+			  #{bitmap},
+			  #{keyid},
+			  #{wxmpId},
+			  #{wxCode}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.DataMember">
+		<![CDATA[UPDATE data_member]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<update id="updateStatusByIds">
+		update data_member set status = #{status}
+		where id in
+		<foreach collection="list" item="idItem" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.DataMember" resultType="cn.rongcapital.mkt.po.DataMember">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.DataMember" resultType="cn.rongcapital.mkt.po.DataMember">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DataMember" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+
+	<!-- 根据taskId查询相关数据 -->
+	<select id="selectByBatchId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataMember">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+		order by create_time DESC
+		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
+	</select>
+
+	<select id="selectMappingKeyId" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1 and keyid is not null
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+		order by create_time DESC
+		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
+	</select>
+
+	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<![CDATA[SELECT]]>
+		COUNT(1)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
+
+	<select id="selectColumns" resultType="java.lang.String">
+		SELECT
+			COLUMN_NAME
+		FROM
+			information_schema.columns
+		WHERE
+			table_name='data_member'
+	</select>
+
+	<update id="cleanAndUpdateByOriginal" parameterType="map">
+		<![CDATA[INSERT INTO data_member]]>
+		(
+		<include refid="ORIGINAL_CLEAN_COLUMN_LIST" />
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(#{obj.memberId}, #{obj.memberPoints},#{obj.memberLevel},
+			#{obj.registTime}, #{obj.cardAmt}, #{obj.expire},
+			#{obj.identifyNo},#{obj.drivingLicense},#{obj.email},
+			#{obj.mobile}, #{obj.tel}, #{obj.qq}, #{obj.acctType}, #{obj.acctNo},
+			#{obj.idfa},
+			#{obj.imei},#{obj.udid},#{obj.phoneMac},#{obj.status},
+			#{obj.createTime},#{obj.updateTime},#{obj.source},
+			#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmpId},#{obj.wxCode})
+		</foreach>
+		on duplicate key update
+		member_id = values(member_id),
+		member_points = values(member_points),
+		member_level = values(member_level),
+		regist_time = values(regist_time),
+		card_amt = values(card_amt),
+		expire = values(expire),
+		identify_no = values(identify_no),
+		driving_license = values(driving_license),
+		email = values(email),
+		mobile = values(mobile),
+		tel = values(tel),
+		qq = values(qq),
+		acct_type = values(acct_type),
+		acct_no = values(acct_no),
+		idfa = values(idfa),
+		imei = values(imei),
+		udid = values(udid),
+		phone_mac = values(phone_mac),
+		create_time = values(create_time),
+		update_time = values(update_time),
+		source = values(source),
+		batch_id = values(batch_id),
+		bitmap = values(bitmap),
+		keyid = values(keyid),
+		wxmp_id = values(wxmp_id),
+		wx_code = values(wx_code)
+	</update>
+
+	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+
+	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataMember">
+		SELECT <include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+	<!-- 查询人口对应主数据id(需要去重) -->
+	<select id="selectMappingKeyIds" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		DISTINCT keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1 and keyid is not null
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
+	
+	<!-- 计算人口数量 -->
+	<select id="getAudiencesCount" parameterType="java.util.Map" resultType="int">
+		<![CDATA[SELECT]]>
+			count(id) as data_member_rows
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE 1=1]]> 
+				
+		<if test="contactIdList != null">
+			<foreach collection="contactIdList" item="contactId">
+				<if test="contactId != null and contactId == 1">
+					<![CDATA[AND mobile is not null]]>
+				</if>
+				<if test="contactId != null and contactId == 2">
+					<![CDATA[AND email is not null]]>
+				</if>
+			</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
+	
+			<!-- 修改keyid -->
+	<update id="updateDataMemberKeyid" parameterType="Map">
+		<![CDATA[UPDATE data_member SET keyid = #{newkeyId} WHERE keyid = #{oldkeyId}]]>
+	</update>
+</mapper>

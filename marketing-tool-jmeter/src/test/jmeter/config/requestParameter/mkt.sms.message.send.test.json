@@ -1,0 +1,5 @@
+{
+	"http_request":"post",
+	"receive_mobiles": "13123456789,13123456789,13123456789,13123456789,13123456789",
+	"send_message": "Hello World!"
+}

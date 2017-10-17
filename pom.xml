@@ -1,0 +1,250 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>cn.rongcapital.mkt</groupId>
+	<artifactId>marketing-cloud</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<build>
+	<plugins>
+		     <plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-surefire-plugin</artifactId>
+		        <configuration>
+		          <skip>true</skip>
+		        </configuration>
+		      </plugin>
+	</plugins>
+	</build>
+	
+	<!-- properties -->
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+        <jetty.version>8.0.0.RC0</jetty.version>   
+	</properties>
+	<!-- modules -->
+	<modules>
+   		<module>marketing-tool-api</module>
+   		<module>marketing-tool-service</module>
+   		<module>marketing-tool-service-impl</module>
+   		<module>marketing-tool-dao</module>
+   		<module>marketing-tool-po</module>
+   		<module>marketing-tool-vo</module>
+   		<module>marketing-tool-job</module>
+   		<module>marketing-tool-common</module>
+		<module>marketing-tool-biz</module>
+		<module>marketing-tool-biz-impl</module>
+		<module>marketing-tool-jmeter</module>
+		<module>marketing-tool-eventcenter</module>
+	</modules>
+	<!-- parent -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.2.8.RELEASE</version>
+    </parent>
+    <!-- dependencies -->
+    <dependencies>
+
+		<!-- 添加单元测试所依赖的框架 -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>  
+    		<groupId>org.springframework.boot</groupId>  
+    		<artifactId>spring-boot-starter-test</artifactId>  
+    		<scope>test</scope>  
+		</dependency>
+
+
+        <!--web,tomcat,spring-mvc support -->
+        <dependency>
+        	<groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+		
+        <!--添加适用于生产环境的功能，如性能指标和监测等功能。 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- resteasy -->
+        <dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-spring</artifactId>
+			<version>3.0.9.Final</version>
+		</dependency> 
+   		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency> 
+		<dependency>
+		    <groupId>org.jboss.resteasy</groupId>
+		    <artifactId>resteasy-hibernatevalidator-provider</artifactId>
+		    <version>3.0.16.Final</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.hibernate</groupId>
+		    <artifactId>hibernate-validator</artifactId>
+			<version>4.2.0.Final</version>		
+		</dependency>
+		<dependency>
+		    <groupId>javax</groupId>
+		    <artifactId>javaee-api</artifactId>
+		    <version>7.0</version>
+		</dependency>
+		<dependency>
+	        <groupId>org.jboss.resteasy</groupId>
+	        <artifactId>resteasy-jackson-provider</artifactId>
+	        <version>3.0.9.Final</version>
+    	</dependency>       
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-lang3</artifactId>
+		    <version>3.4</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.alibaba</groupId>
+		    <artifactId>fastjson</artifactId>
+		    <version>1.2.9</version>
+		</dependency>
+
+		<!-- 文件上传所依赖的第三方Jar包 -->
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-multipart-provider</artifactId>
+			<version>2.2.0.GA</version>
+		</dependency>
+
+		<!-- optional, good for handle I/O task -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.0.1</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+		<dependency>
+		<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons-core</artifactId>
+			<version>1.4.1.RELEASE</version>
+		</dependency>
+		
+		<dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jms</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-client</artifactId>
+		</dependency>
+  
+	   <dependency>
+		   <groupId>joda-time</groupId>
+		   <artifactId>joda-time</artifactId>
+	   </dependency>
+
+<!-- 		<dependency>  
+		    <groupId>org.springframework.boot</groupId>  
+		    <artifactId>spring-boot-starter-freemarker</artifactId>  
+		</dependency>  --> 
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5</version>
+			<scope>test</scope>
+		</dependency>
+	      
+    </dependencies>
+
+		
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <mvnvar.log.path>/rc/log/mkt/dev</mvnvar.log.path>
+                <mvnvar.conf.path>conf_dev</mvnvar.conf.path>
+                <!-- 本机编译 -->
+                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                <!-- 服务器编译  -->
+                <!--  
+                <maven.repository.rongcapital.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.rongcapital.url>
+                -->
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+            	<mvnvar.log.path>/rc/log/mkt/test</mvnvar.log.path>
+                <mvnvar.conf.path>conf_test</mvnvar.conf.path>
+                <maven.repository.rongcapital.url>http://nexus.rc.dataengine.com/nexus/content/groups/public/</maven.repository.rongcapital.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <mvnvar.log.path>/rc/log/mkt/production</mvnvar.log.path>
+                <mvnvar.conf.path>conf</mvnvar.conf.path>
+                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>production_gbs</id>
+            <properties>
+                <mvnvar.log.path>/rc/log/mkt/production_gws</mvnvar.log.path>
+                <mvnvar.conf.path>conf_gbs</mvnvar.conf.path>
+                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>cloud_dev</id>
+            <properties>
+            	<mvnvar.log.path>/rc/log/mkt/dev</mvnvar.log.path>
+                <mvnvar.conf.path>cloud_dev</mvnvar.conf.path>
+                <maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+            </properties>
+        </profile>
+        <profile>
+            <id>cloud_test</id>
+            <properties>
+            	<mvnvar.log.path>/rc/log/mkt/test</mvnvar.log.path>
+                <mvnvar.conf.path>cloud_test</mvnvar.conf.path>
+				<maven.repository.remote.url>http://10.161.29.229:8081/nexus/content/groups/public/</maven.repository.remote.url>
+            </properties>
+        </profile>
+    </profiles>
+    
+    <repositories>
+    	<repository>
+	        <id>nexus-rongcapital</id>
+	        <name>nexus-rongcapital</name>
+	        <url>${maven.repository.rongcapital.url}</url>
+	        <releases>
+	            <enabled>true</enabled>
+	        </releases>
+	        <snapshots>
+	            <enabled>true</enabled>
+	        </snapshots>
+    	</repository>
+	</repositories>
+	
+</project>	

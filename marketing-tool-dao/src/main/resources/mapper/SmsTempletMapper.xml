@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.SmsTempletDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,code as code,channel_type as channelType,type as type,content as content,audit_status as auditStatus,auditor as auditor,status as status,creator as creator,create_time as createTime,update_user as updateUser,update_time as updateTime,name as name,audit_reason as auditReason,audit_time as auditTime]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM sms_templet]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="code != null"><![CDATA[ AND code = #{code}]]></if>
+		    	<if test="channelType != null"><![CDATA[ AND channel_type = #{channelType}]]></if>
+		    	<if test="type != null"><![CDATA[ AND type = #{type}]]></if>
+		    	<if test="content != null"><![CDATA[ AND content like CONCAT('%',#{content},'%' )]]></if>
+		    	<if test="auditStatus != null"><![CDATA[ AND audit_status = #{auditStatus}]]></if>
+		    	<if test="auditor != null"><![CDATA[ AND auditor = #{auditor}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="creator != null"><![CDATA[ AND creator = #{creator}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateUser != null"><![CDATA[ AND update_user = #{updateUser}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name like CONCAT('%',#{name},'%' )]]></if>
+		    	<if test="auditReason != null"><![CDATA[ AND audit_reason = #{auditReason}]]></if>
+		    	<if test="auditTime != null"><![CDATA[ AND audit_time = #{auditTime}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="code != null"><![CDATA[code = #{code},]]></if>
+		    	<if test="channelType != null"><![CDATA[channel_type = #{channelType},]]></if>
+		    	<if test="type != null"><![CDATA[type = #{type},]]></if>
+		    	<if test="content != null"><![CDATA[content = #{content},]]></if>
+		    	<if test="auditStatus != null"><![CDATA[audit_status = #{auditStatus},]]></if>
+		    	<if test="auditor != null"><![CDATA[auditor = #{auditor},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="creator != null"><![CDATA[creator = #{creator},]]></if>
+		    	<if test="updateUser != null"><![CDATA[update_user = #{updateUser},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="auditReason != null"><![CDATA[audit_reason = #{auditReason},]]></if>
+		    	<if test="auditTime != null"><![CDATA[audit_time = #{auditTime}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SmsTemplet" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO sms_templet (code,channel_type,type,content,audit_status,auditor,creator,create_time,update_user,name,audit_reason,audit_time)
+			VALUES
+			(
+			  #{code},
+			  #{channelType},
+			  #{type},
+			  #{content},
+			  #{auditStatus},
+			  #{auditor},
+			  #{creator},
+			  now(),
+			  #{updateUser},
+			  #{name},
+			  #{auditReason},
+			  #{auditTime}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.SmsTemplet">
+		<![CDATA[UPDATE sms_templet]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.po.SmsTemplet">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.po.SmsTemplet">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+
+	<select id="selectListCountGroupByType" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo">
+		<![CDATA[SELECT COUNT(id) AS dataCount,type]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<![CDATA[ GROUP BY type]]>
+	</select>
+	
+	<select id="selectListCountGroupByAuditStatus" parameterType="cn.rongcapital.mkt.po.SmsTemplet" resultType="cn.rongcapital.mkt.vo.sms.out.SmsTempletCountVo">
+		<![CDATA[SELECT COUNT(id) AS dataCount,audit_status as auditStatus]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<![CDATA[ GROUP BY audit_status]]>
+	</select>		
+	<!-- 其它SQL语句 -->
+	
+	<!-- 分组计算数量 -->
+	<select id="getTempletCountByType" parameterType="String" resultType="Map">
+		<![CDATA[SELECT TYPE AS type ,COUNT(1) AS count FROM `sms_templet` WHERE STATUS = '0']]>
+		<if test="channelType != null"><![CDATA[AND channel_type = #{channelType}]]></if>
+		<![CDATA[   GROUP BY TYPE ]]>
+	</select>	
+	
+</mapper>

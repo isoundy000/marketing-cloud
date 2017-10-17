@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.TagValueCountDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ tag_id as tagId,tag_name as tagName,tag_value as tagValue,value_count as valueCount,tag_value_seq as tagValueSeq,tag_path as tagPath,is_tag as isTag,search_mod as searchMod,update_flag as updateFlag,tag_desc as tagDesc]]>
+	</sql>
+
+	<!-- 查询列来源表 -->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM tag_value_count]]></sql>
+
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+			<if test="tagId != null"><![CDATA[ AND tag_id = #{tagId}]]></if>
+			<if test="tagName != null"><![CDATA[ AND tag_name = #{tagName}]]></if>
+			<if test="tagValue != null"><![CDATA[ AND tag_value = #{tagValue}]]></if>
+			<if test="valueCount != null"><![CDATA[ AND value_count = #{valueCount}]]></if>
+			<if test="tagValueSeq != null"><![CDATA[ AND tag_value_seq = #{tagValueSeq}]]></if>
+			<if test="tagPath != null"><![CDATA[ AND tag_path = #{tagPath}]]></if>
+			<if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
+			<if test="searchMod != null"><![CDATA[ AND search_mod = #{searchMod}]]></if>
+			<if test="updateFlag != null"><![CDATA[ AND update_flag = #{updateFlag}]]></if>
+			<if test="tagDesc != null"><![CDATA[ AND tag_desc = #{tagDesc}]]></if>
+		</where>
+	</sql>
+
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if
+			test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+			<if test="tagId != null"><![CDATA[tag_id = #{tagId},]]></if>
+			<if test="tagName != null"><![CDATA[tag_name = #{tagName},]]></if>
+			<if test="tagValue != null"><![CDATA[tag_value = #{tagValue},]]></if>
+			<if test="valueCount != null"><![CDATA[value_count = #{valueCount},]]></if>
+			<if test="tagValueSeq != null"><![CDATA[tag_value_seq = #{tagValueSeq},]]></if>
+			<if test="tagPath != null"><![CDATA[tag_path = #{tagPath},]]></if>
+			<if test="isTag != null"><![CDATA[is_tag = #{isTag},]]></if>
+			<if test="searchMod != null"><![CDATA[search_mod = #{searchMod},]]></if>
+			<if test="updateFlag != null"><![CDATA[update_flag = #{updateFlag},]]></if>
+			<if test="tagDesc != null"><![CDATA[tag_desc = #{tagDesc}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+		useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO tag_value_count (tag_id,tag_name,tag_value,value_count,tag_value_seq,tag_path,is_tag,search_mod,update_flag,tag_desc)
+			VALUES
+			(
+			  #{tagId},
+			  #{tagName},
+			  #{tagValue},
+			  #{valueCount},
+			  #{tagValueSeq},
+			  #{tagPath},
+			  #{isTag},
+			  #{searchMod},
+			  #{updateFlag},
+			  #{tagDesc}
+			)
+		]]>
+	</insert>
+
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.TagValueCount">
+		<![CDATA[UPDATE tag_value_count]]>
+		<include refid="UPDATE_COLUMN_SET" />
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+		resultType="cn.rongcapital.mkt.po.TagValueCount">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE" />
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator=","
+			close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+		resultType="cn.rongcapital.mkt.po.TagValueCount">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE" />
+		<include refid="QUERY_WHERE_CLAUSE" />
+		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+		resultType="int">
+		<![CDATA[SELECT COUNT(1) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE" />
+		<include refid="QUERY_WHERE_CLAUSE" />
+	</select>
+
+	<!-- 其它SQL语句 -->
+
+
+	<!-- 删除所有数据 -->
+	<delete id="clearStockData">
+		DELETE
+		<include refid="QUERY_FROM_TABLE" />
+	</delete>
+
+	<!-- 查询标签值数量 -->
+	<select id="selectValueAmmount" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+		resultType="java.lang.Long">
+		SELECT value_count
+		FROM tag_id = #{tagId}
+		AND tag_value = #{tagValue}
+	</select>
+
+	<!-- 查询标签值的id -->
+	<select id="selectTagValueId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT tag_value_seq
+		FROM tag_value_count
+		<where>
+			tag_id = #{tagId}
+			AND tag_value =#{tagValue}
+		</where>
+	</select>
+
+	<select id="selectTagValueCountListByKeyWord" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+		resultType="cn.rongcapital.mkt.po.TagValueCount">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE" />
+		WHERE tag_id = #{tagId}
+		<if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
+	</select>
+
+	<!-- 模糊搜索标签值和标签名 -->
+	<select id="selectFuzzyTagValue" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+		resultType="cn.rongcapital.mkt.po.TagValueCount">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE" />
+		<where>
+			<if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
+			<if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
+			AND value_count > 0
+		</where>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION" />
+	</select>
+
+	<!-- 模糊搜索标签值和标签名 统计总数 -->
+	<select id="selectFuzzyTagValueCount" parameterType="cn.rongcapital.mkt.po.TagValueCount"
+		resultType="int">
+		<![CDATA[SELECT COUNT(1) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE" />
+		<where>
+			<if test="tagValue != null"><![CDATA[ AND tag_value like CONCAT('%',#{tagValue},'%')]]></if>
+			<if test="isTag != null"><![CDATA[ AND is_tag = #{isTag}]]></if>
+			AND value_count > 0
+		</where>
+	</select>
+	
+	<!-- 通过标签ID查询标签 -->
+	<select id="selectTagByTagId" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.TagValueCount">
+		SELECT 
+			<include refid="QUERY_COLUMN_LIST" />
+			<include refid="QUERY_FROM_TABLE" />
+		WHERE is_tag = '1'
+		AND tag_id = #{tagId}
+	</select>
+	
+	<delete id="deleteTagByTagId" parameterType="java.lang.String">
+		DELETE FROM tag_value_count WHERE tag_id = #{tagId}
+	</delete>
+	
+	<select id="getTagCountByTagId" parameterType="java.lang.String" resultType="java.lang.Long">
+		SELECT value_count FROM tag_value_count WHERE tag_id = #{tagId}
+	</select>
+	
+	<update id="changeUpdateFlagByTagId" parameterType="cn.rongcapital.mkt.po.TagValueCount">
+		UPDATE tag_value_count 
+		SET update_flag = #{updateFlag} 
+		WHERE tag_id = #{tagId} 
+		AND is_tag = '1'
+	</update>
+</mapper>

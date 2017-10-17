@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.DataPopulationDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,mobile as mobile,name as name,gender as gender,birthday as birthday,provice as provice,city as city,job as job,monthly_income as monthlyIncome,monthly_consume as monthlyConsume,marital_status as maritalStatus,education as education,employment as employment,nationality as nationality,blood_type as bloodType,citizenship as citizenship,iq as iq,identify_no as identifyNo,driving_license as drivingLicense,email as email,tel as tel,qq as qq,acct_type as acctType,acct_no as acctNo,idfa as idfa,imei as imei,udid as udid,phone_mac as phoneMac,status as status,create_time as createTime,update_time as updateTime,source as source,batch_id as batchId,bitmap as bitmap,keyid as keyid,wxmp_id as wxmpId,wx_code as wxCode,nickname as nickname,head_img_url as headImgUrl,subscribe_time as subscribeTime,language as language,unionid as unionid,remark as remark]]>
+	</sql>
+
+    <!-- Original需要更新的列 -->
+    <sql id="UPDATE_COLUMN_LIST">
+        <![CDATA[ mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,
+        marital_status,education,employment,nationality,blood_type,citizenship,iq,
+        identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,
+        udid,phone_mac,create_time,update_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code]]>
+    </sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM data_population]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="mobile != null"><![CDATA[ AND mobile = #{mobile}]]></if>
+		    	<if test="name != null"><![CDATA[ AND name = #{name}]]></if>
+		    	<if test="gender != null"><![CDATA[ AND gender = #{gender}]]></if>
+		    	<if test="birthday != null"><![CDATA[ AND birthday = #{birthday}]]></if>
+		    	<if test="provice != null"><![CDATA[ AND provice = #{provice}]]></if>
+		    	<if test="city != null"><![CDATA[ AND city = #{city}]]></if>
+		    	<if test="job != null"><![CDATA[ AND job = #{job}]]></if>
+		    	<if test="monthlyIncome != null"><![CDATA[ AND monthly_income = #{monthlyIncome}]]></if>
+		    	<if test="monthlyConsume != null"><![CDATA[ AND monthly_consume = #{monthlyConsume}]]></if>
+		    	<if test="maritalStatus != null"><![CDATA[ AND marital_status = #{maritalStatus}]]></if>
+		    	<if test="education != null"><![CDATA[ AND education = #{education}]]></if>
+		    	<if test="employment != null"><![CDATA[ AND employment = #{employment}]]></if>
+		    	<if test="nationality != null"><![CDATA[ AND nationality = #{nationality}]]></if>
+		    	<if test="bloodType != null"><![CDATA[ AND blood_type = #{bloodType}]]></if>
+		    	<if test="citizenship != null"><![CDATA[ AND citizenship = #{citizenship}]]></if>
+		    	<if test="iq != null"><![CDATA[ AND iq = #{iq}]]></if>
+		    	<if test="identifyNo != null"><![CDATA[ AND identify_no = #{identifyNo}]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[ AND driving_license = #{drivingLicense}]]></if>
+		    	<if test="email != null"><![CDATA[ AND email = #{email}]]></if>
+		    	<if test="tel != null"><![CDATA[ AND tel = #{tel}]]></if>
+		    	<if test="qq != null"><![CDATA[ AND qq = #{qq}]]></if>
+		    	<if test="acctType != null"><![CDATA[ AND acct_type = #{acctType}]]></if>
+		    	<if test="acctNo != null"><![CDATA[ AND acct_no = #{acctNo}]]></if>
+		    	<if test="idfa != null"><![CDATA[ AND idfa = #{idfa}]]></if>
+		    	<if test="imei != null"><![CDATA[ AND imei = #{imei}]]></if>
+		    	<if test="udid != null"><![CDATA[ AND udid = #{udid}]]></if>
+		    	<if test="phoneMac != null"><![CDATA[ AND phone_mac = #{phoneMac}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="source != null"><![CDATA[ AND source = #{source}]]></if>
+		    	<if test="batchId != null"><![CDATA[ AND batch_id = #{batchId}]]></if>
+		    	<if test="bitmap != null"><![CDATA[ AND bitmap = #{bitmap}]]></if>
+		    	<if test="keyid != null"><![CDATA[ AND keyid = #{keyid}]]></if>
+		    	<if test="wxmpId != null"><![CDATA[ AND wxmp_id = #{wxmpId}]]></if>
+		    	<if test="wxCode != null"><![CDATA[ AND wx_code = #{wxCode}]]></if>
+		    	<if test="nickname != null"><![CDATA[ AND nickname = #{nickname}]]></if>
+		    	<if test="headImgUrl != null"><![CDATA[ AND head_img_url = #{headImgUrl}]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[ AND subscribe_time = #{subscribeTime}]]></if>
+		    	<if test="language != null"><![CDATA[ AND language = #{language}]]></if>
+		    	<if test="unionid != null"><![CDATA[ AND unionid = #{unionid}]]></if>
+		    	<if test="remark != null"><![CDATA[ AND remark = #{remark}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="mobile != null"><![CDATA[mobile = #{mobile},]]></if>
+		    	<if test="name != null"><![CDATA[name = #{name},]]></if>
+		    	<if test="gender != null"><![CDATA[gender = #{gender},]]></if>
+		    	<if test="birthday != null"><![CDATA[birthday = #{birthday},]]></if>
+		    	<if test="provice != null"><![CDATA[provice = #{provice},]]></if>
+		    	<if test="city != null"><![CDATA[city = #{city},]]></if>
+		    	<if test="job != null"><![CDATA[job = #{job},]]></if>
+		    	<if test="monthlyIncome != null"><![CDATA[monthly_income = #{monthlyIncome},]]></if>
+		    	<if test="monthlyConsume != null"><![CDATA[monthly_consume = #{monthlyConsume},]]></if>
+		    	<if test="maritalStatus != null"><![CDATA[marital_status = #{maritalStatus},]]></if>
+		    	<if test="education != null"><![CDATA[education = #{education},]]></if>
+		    	<if test="employment != null"><![CDATA[employment = #{employment},]]></if>
+		    	<if test="nationality != null"><![CDATA[nationality = #{nationality},]]></if>
+		    	<if test="bloodType != null"><![CDATA[blood_type = #{bloodType},]]></if>
+		    	<if test="citizenship != null"><![CDATA[citizenship = #{citizenship},]]></if>
+		    	<if test="iq != null"><![CDATA[iq = #{iq},]]></if>
+		    	<if test="identifyNo != null"><![CDATA[identify_no = #{identifyNo},]]></if>
+		    	<if test="drivingLicense != null"><![CDATA[driving_license = #{drivingLicense},]]></if>
+		    	<if test="email != null"><![CDATA[email = #{email},]]></if>
+		    	<if test="tel != null"><![CDATA[tel = #{tel},]]></if>
+		    	<if test="qq != null"><![CDATA[qq = #{qq},]]></if>
+		    	<if test="acctType != null"><![CDATA[acct_type = #{acctType},]]></if>
+		    	<if test="acctNo != null"><![CDATA[acct_no = #{acctNo},]]></if>
+		    	<if test="idfa != null"><![CDATA[idfa = #{idfa},]]></if>
+		    	<if test="imei != null"><![CDATA[imei = #{imei},]]></if>
+		    	<if test="udid != null"><![CDATA[udid = #{udid},]]></if>
+		    	<if test="phoneMac != null"><![CDATA[phone_mac = #{phoneMac},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="source != null"><![CDATA[source = #{source},]]></if>
+		    	<if test="batchId != null"><![CDATA[batch_id = #{batchId},]]></if>
+		    	<if test="bitmap != null"><![CDATA[bitmap = #{bitmap},]]></if>
+		    	<if test="keyid != null"><![CDATA[keyid = #{keyid},]]></if>
+		    	<if test="wxmpId != null"><![CDATA[wxmp_id = #{wxmpId},]]></if>
+		    	<if test="wxCode != null"><![CDATA[wx_code = #{wxCode},]]></if>
+		    	<if test="nickname != null"><![CDATA[nickname = #{nickname},]]></if>
+		    	<if test="headImgUrl != null"><![CDATA[head_img_url = #{headImgUrl},]]></if>
+		    	<if test="subscribeTime != null"><![CDATA[subscribe_time = #{subscribeTime},]]></if>
+		    	<if test="language != null"><![CDATA[language = #{language},]]></if>
+		    	<if test="unionid != null"><![CDATA[unionid = #{unionid},]]></if>
+		    	<if test="remark != null"><![CDATA[remark = #{remark}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.DataPopulation" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO data_population (mobile,name,gender,birthday,provice,city,job,monthly_income,monthly_consume,marital_status,education,employment,nationality,blood_type,citizenship,iq,identify_no,driving_license,email,tel,qq,acct_type,acct_no,idfa,imei,udid,phone_mac,create_time,source,batch_id,bitmap,keyid,wxmp_id,wx_code,nickname,head_img_url,subscribe_time,language,unionid,remark)
+			VALUES
+			(
+			  #{mobile},
+			  #{name},
+			  #{gender},
+			  #{birthday},
+			  #{provice},
+			  #{city},
+			  #{job},
+			  #{monthlyIncome},
+			  #{monthlyConsume},
+			  #{maritalStatus},
+			  #{education},
+			  #{employment},
+			  #{nationality},
+			  #{bloodType},
+			  #{citizenship},
+			  #{iq},
+			  #{identifyNo},
+			  #{drivingLicense},
+			  #{email},
+			  #{tel},
+			  #{qq},
+			  #{acctType},
+			  #{acctNo},
+			  #{idfa},
+			  #{imei},
+			  #{udid},
+			  #{phoneMac},
+			  now(),
+			  #{source},
+			  #{batchId},
+			  #{bitmap},
+			  #{keyid},
+			  #{wxmpId},
+			  #{wxCode},
+			  #{nickname},
+			  #{headImgUrl},
+			  #{subscribeTime},
+			  #{language},
+			  #{unionid},
+			  #{remark}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.DataPopulation">
+		<![CDATA[UPDATE data_population]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<update id="updateStatusByIds">
+		update data_population set status = #{status}
+		where id in
+		<foreach collection="list" item="idItem" open="(" separator="," close=")">
+			#{idItem}
+		</foreach>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.DataPopulation" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.DataPopulation" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.DataPopulation" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+
+	<!-- 根据taskId查询相关数据 -->
+	<select id="selectByBatchId" parameterType="java.util.Map" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+		order by create_time DESC
+		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
+	</select>
+
+	<select id="selectMappingKeyId" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1 and keyid is not null
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+		order by create_time DESC
+		<if test="pageSize != null and pageSize != null and pageSize &gt; 0">
+			<![CDATA[LIMIT #{startIndex},#{pageSize}]]>
+		</if>
+	</select>
+
+	<select id="selectCountByBatchId" parameterType="java.util.Map" resultType="java.lang.Integer">
+		<![CDATA[SELECT]]>
+		COUNT(1)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
+
+	<select id="selectColumns" resultType="java.lang.String">
+		SELECT
+			COLUMN_NAME
+		FROM
+			information_schema.columns
+		WHERE
+			table_name='data_population'
+	</select>
+
+	<insert id="cleanAndUpdateByOriginal" parameterType="map">
+		<![CDATA[INSERT INTO data_population]]>
+		(
+		    <include refid="UPDATE_COLUMN_LIST" />
+		)
+		values
+		<foreach collection="list" item="obj" index="index" separator=",">
+            (#{obj.mobile},#{obj.name},#{obj.gender},#{obj.birthday},#{obj.provice},
+            #{obj.city},#{obj.job},#{obj.monthlyIncome},#{obj.monthlyConsume},#{obj.maritalStatus},
+            #{obj.education},#{obj.employment},#{obj.nationality},#{obj.bloodType},#{obj.citizenship},
+            #{obj.iq},#{obj.identifyNo},#{obj.drivingLicense},#{obj.email},#{obj.tel},#{obj.qq},
+            #{obj.acctType},#{obj.acctNo},#{obj.idfa},#{obj.imei},#{obj.udid},#{obj.phoneMac},
+            #{obj.createTime},#{obj.updateTime},#{obj.source},#{obj.batchId},#{obj.bitmap},#{obj.keyid},#{obj.wxmpId},#{obj.wxCode})
+		</foreach>
+
+        on duplicate key update
+        mobile = COALESCE(values(mobile), mobile),
+        gender = COALESCE(values(gender), gender),
+        name = COALESCE(values(name), name),
+        birthday = COALESCE(values(birthday), birthday),
+        provice = COALESCE(values(provice), provice),
+        city = COALESCE(values(city), city),
+        job = COALESCE(values(job), job),
+        monthly_income = COALESCE(values(monthly_income), monthly_income),
+        monthly_consume = COALESCE(values(monthly_consume), monthly_consume),
+        marital_status = COALESCE(values(marital_status), marital_status),
+        education = COALESCE(values(education), education),
+        employment = COALESCE(values(employment), employment),
+        nationality = COALESCE(values(nationality), nationality),
+        blood_type = COALESCE(values(blood_type), blood_type),
+        citizenship = COALESCE(values(citizenship), citizenship),
+        iq = COALESCE(values(iq), iq),
+        identify_no = COALESCE(values(identify_no), identify_no),
+        driving_license = COALESCE(values(driving_license), driving_license),
+        email = COALESCE(values(email), email),
+        tel = COALESCE(values(tel), tel),
+        qq = COALESCE(values(qq), qq),
+        acct_type = COALESCE(values(acct_type), acct_type),
+        acct_no = COALESCE(values(acct_no), acct_no),
+        idfa = COALESCE(values(idfa), idfa),
+        imei = COALESCE(values(imei), imei),
+        udid = COALESCE(values(udid), udid),
+        phone_mac = COALESCE(values(phone_mac), phone_mac),
+        source = COALESCE(values(source), source),
+        update_time = COALESCE(values(update_time), update_time),
+        batch_id = COALESCE(values(batch_id), batch_id),
+		wxmp_id = COALESCE(values(wxmp_id), wxmp_id),
+		wx_code = COALESCE(values(wx_code), wx_code)
+	</insert>
+
+	<select id="selectMobileById" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT mobile
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+
+	<select id="selectObjectById" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		SELECT <include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE id = #{id}
+	</select>
+
+	<select id="getDataPopulationByMobile" parameterType="java.lang.String" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		SELECT <include refid="QUERY_COLUMN_LIST" />
+		<include refid="QUERY_FROM_TABLE"/>
+        WHERE mobile = #{mobile}
+	</select>
+
+	<!-- 修改记录通过手机号 -->
+	<update id="updateDataPopulation" parameterType="cn.rongcapital.mkt.po.DataPopulation">
+		<![CDATA[UPDATE data_population]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE mobile = #{mobile}]]>
+	</update>
+
+	<!-- 修改记录通过手机号 -->
+	<update id="updateDataPopulationByPubIdAndOpenId" parameterType="cn.rongcapital.mkt.po.DataPopulation">
+		<![CDATA[UPDATE data_population]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE wxmp_id = #{wxmpId} and wx_code = #{wxCode}]]>
+	</update>
+	
+	<select id="selectKeyidListByIdList" parameterType="java.util.List" resultType="java.lang.Integer">
+		SELECT keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+		<select id="searchDataByAudienceId" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		select IFNULL(a.name,'') as name,IFNULL(a.mobile,'') as mobile,IFNULL(a.gender,'') as gender,IFNULL(a.birthday,'') as birthdayExport,IFNULL(a.provice,'') as provice,IFNULL(a.city,'') as city,IFNULL(a.email,'') as email,IFNULL(a.identify_no,'') as identifyNo,IFNULL(a.driving_license,'') as drivingLicense 
+		from data_population a
+ 		inner join audience_list_party_map b on a.keyid = b.party_id
+		where b.audience_list_id =  #{audience_id} and a.status!=1
+		group by a.keyid
+	</select>
+	
+	<select id="segmentSearch" parameterType="cn.rongcapital.mkt.vo.in.SegmentSearchIn" resultType="cn.rongcapital.mkt.po.DataPopulation">
+		SELECT population.name from data_population population  
+		WHERE population.keyid in
+		<foreach collection="headidList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+		<![CDATA[and population.name like  CONCAT('%',#{queryName},'%')]]>
+	</select>
+	<select id="getSegmentSearchDownload" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.SegmentSearchDownloadOut">
+	SELECT id,name,mobile,
+	case gender
+	when '1' then '男'
+	when '2' then '女'
+	when '3' then '未知'
+	end gender,
+	birthday,provice,city,
+	email,identify_no as identifyNo,driving_license as drivingLicense,wx_code as wxCode,qq 
+	from data_party  where id in
+	<foreach collection="headidList" index="index" item="item" separator="," open="(" close=")">
+		#{item}
+	</foreach>
+</select>
+
+	<select id="selectCountFromContactList" parameterType="java.util.List" resultType="java.lang.Integer">
+		SELECT count(distinct keyid)
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE id in
+		<foreach collection="idList" item="item" index="index" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 根据keyid获取渠道名和渠道大类 -->
+	<select id="selectMediaChannel" parameterType="java.lang.Integer" resultType="java.util.Map">
+       <![CDATA[SELECT dp.source as source, ctm.media_channel as media_channel ]]>
+       <![CDATA[FROM data_population as dp, channel_type_mapping as ctm ]]>
+       <![CDATA[WHERE dp.source = ctm.media_channel_name AND dp.keyid = #{keyId}]]>
+    </select>
+    	
+	<!-- 查询人口对应主数据id(需要去重) -->
+	<select id="selectMappingKeyIds" parameterType="java.util.Map" resultType="java.lang.String">
+		<![CDATA[SELECT]]>
+		DISTINCT keyid
+		<include refid="QUERY_FROM_TABLE"/>
+		WHERE 1=1 and keyid is not null
+		<if test="contactIdList != null">
+		<foreach collection="contactIdList" item="contactId">
+			<if test="contactId != null and contactId == 1">
+				<![CDATA[AND mobile is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 2">
+				<![CDATA[AND email is not null]]>
+			</if>
+			<if test="contactId != null and contactId == 3">
+				<![CDATA[AND wechat is not null]]>
+			</if>
+		</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
+	
+	<!-- 计算人口数量 -->
+	<select id="getAudiencesCount" parameterType="java.util.Map" resultType="int">
+		<![CDATA[SELECT]]>
+			count(id) as data_population_rows
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE 1=1]]> 
+				
+		<if test="contactIdList != null">
+			<foreach collection="contactIdList" item="contactId">
+				<if test="contactId != null and contactId == 1">
+					<![CDATA[AND mobile is not null]]>
+				</if>
+				<if test="contactId != null and contactId == 2">
+					<![CDATA[AND email is not null]]>
+				</if>
+			</foreach>
+		</if>
+		<if test="timeCondition != null">
+			<![CDATA[AND create_time > #{timeCondition}]]>
+		</if>
+	</select>
+
+	<select id="getTagAudienceDownloadList" parameterType="java.util.List" resultType="cn.rongcapital.mkt.vo.out.TagAudienceDownloadOut">
+		SELECT population.name,population.mobile,
+		case population.gender
+		when '1' then '男'
+		when '2' then '女'
+		when '3' then '未知'
+		end gender,
+		population.birthday,population.provice,population.city,
+		population.email,population.identify_no as identifyNo,population.driving_license as drivingLicense,population.wx_code as wxCode,population.qq
+		from data_population population INNER JOIN data_party party on population.keyid = party.id
+		WHERE party.id in
+		<foreach collection="idList" index="index" item="item" separator="," open="(" close=")">
+			#{item}
+		</foreach>
+	</select>
+	
+		<!-- 修改keyid -->
+	<update id="updateDataPopulationKeyid" parameterType="Map">
+		<![CDATA[UPDATE data_population SET keyid = #{newkeyId} WHERE keyid = #{oldkeyId}]]>
+	</update>
+	
+</mapper>

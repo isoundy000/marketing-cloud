@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.rongcapital.mkt.dao.SegmentationBodyDao">
+
+	<!-- 所有查询列 -->
+	<sql id="QUERY_COLUMN_LIST">
+		<![CDATA[ id as id,head_id as headId,group_id as groupId,group_name as groupName,group_index as groupIndex,tag_id as tagId,tag_name as tagName,tag_exclude as tagExclude,tag_value_id as tagValueId,tag_value_name as tagValueName,status as status,create_time as createTime,update_time as updateTime,tag_seq as tagSeq]]>
+	</sql>
+
+	<!-- 查询列来源表-->
+	<sql id="QUERY_FROM_TABLE"><![CDATA[FROM segmentation_body]]></sql>
+	
+	<!-- 全部条件 -->
+	<sql id="QUERY_WHERE_CLAUSE">
+		<where>
+		    	<if test="id != null"><![CDATA[ AND id = #{id}]]></if>
+		    	<if test="headId != null"><![CDATA[ AND head_id = #{headId}]]></if>
+		    	<if test="groupId != null"><![CDATA[ AND group_id = #{groupId}]]></if>
+		    	<if test="groupName != null"><![CDATA[ AND group_name = #{groupName}]]></if>
+		    	<if test="groupIndex != null"><![CDATA[ AND group_index = #{groupIndex}]]></if>
+		    	<if test="tagId != null"><![CDATA[ AND tag_id = #{tagId}]]></if>
+		    	<if test="tagName != null"><![CDATA[ AND tag_name = #{tagName}]]></if>
+		    	<if test="tagExclude != null"><![CDATA[ AND tag_exclude = #{tagExclude}]]></if>
+		    	<if test="tagValueId != null"><![CDATA[ AND tag_value_id = #{tagValueId}]]></if>
+		    	<if test="tagValueName != null"><![CDATA[ AND tag_value_name = #{tagValueName}]]></if>
+		    	<if test="status != null"><![CDATA[ AND status = #{status}]]></if>
+		    	<if test="createTime != null"><![CDATA[ AND create_time = #{createTime}]]></if>
+		    	<if test="updateTime != null"><![CDATA[ AND update_time = #{updateTime}]]></if>
+		    	<if test="tagSeq != null"><![CDATA[ AND tag_seq = #{tagSeq}]]></if>
+		</where>
+	</sql>
+	
+	<!-- 智能排序与分页 -->
+	<sql id="QUERY_ORDER_LIMIT_CONDTION">
+		<if test="orderField != null and orderFieldType != null"><![CDATA[ORDER BY ${orderField} ${orderFieldType}]]></if>
+		<if test="startIndex != null and startIndex &gt;= 0 and pageSize != null and pageSize &gt; 0"><![CDATA[LIMIT #{startIndex},#{pageSize}]]></if>	
+	</sql>
+
+	<!-- 更新列字段,只要不为NULL则更新,除开主键列 -->
+	<sql id="UPDATE_COLUMN_SET">
+		<set>
+		    	<if test="headId != null"><![CDATA[head_id = #{headId},]]></if>
+		    	<if test="groupId != null"><![CDATA[group_id = #{groupId},]]></if>
+		    	<if test="groupName != null"><![CDATA[group_name = #{groupName},]]></if>
+		    	<if test="groupIndex != null"><![CDATA[group_index = #{groupIndex},]]></if>
+		    	<if test="tagId != null"><![CDATA[tag_id = #{tagId},]]></if>
+		    	<if test="tagName != null"><![CDATA[tag_name = #{tagName},]]></if>
+		    	<if test="tagExclude != null"><![CDATA[tag_exclude = #{tagExclude},]]></if>
+		    	<if test="tagValueId != null"><![CDATA[tag_value_id = #{tagValueId},]]></if>
+		    	<if test="tagValueName != null"><![CDATA[tag_value_name = #{tagValueName},]]></if>
+		    	<if test="status != null"><![CDATA[status = #{status},]]></if>
+		    	<if test="tagSeq != null"><![CDATA[tag_seq = #{tagSeq}]]></if>
+		</set>
+	</sql>
+
+	<!-- 插入action记录 -->
+	<insert id="insert" parameterType="cn.rongcapital.mkt.po.SegmentationBody" useGeneratedKeys="true" keyProperty="id">
+		<![CDATA[
+			INSERT INTO segmentation_body (head_id,group_id,group_name,group_index,tag_id,tag_name,tag_exclude,tag_value_id,tag_value_name,create_time,tag_seq)
+			VALUES
+			(
+			  #{headId},
+			  #{groupId},
+			  #{groupName},
+			  #{groupIndex},
+			  #{tagId},
+			  #{tagName},
+			  #{tagExclude},
+			  #{tagValueId},
+			  #{tagValueName},
+			  now(),
+			  #{tagSeq}
+			)
+		]]>
+	</insert>
+	
+	<!-- 返回插入的编号,在事务开启状态下有效 -->
+	<select id="lastSequence" resultType="int"><![CDATA[SELECT LAST_INSERT_ID() AS id]]></select>
+
+	<!-- 修改记录通过主键 -->
+	<update id="updateById" parameterType="cn.rongcapital.mkt.po.SegmentationBody">
+		<![CDATA[UPDATE segmentation_body]]>
+		<include refid="UPDATE_COLUMN_SET"/>
+		<![CDATA[WHERE id = #{id}]]>
+	</update>
+
+	<!-- 查询,通过主键IN(array) -->
+	<select id="selectListByIdList" parameterType="cn.rongcapital.mkt.po.SegmentationBody" resultType="cn.rongcapital.mkt.po.SegmentationBody">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<![CDATA[WHERE id IN]]>
+		<foreach collection="list" item="id" open="(" separator="," close=")">
+			<![CDATA[#{id}]]>
+		</foreach>
+	</select>
+
+	<!-- 查询,通过条件 -->
+	<select id="selectList" parameterType="cn.rongcapital.mkt.po.SegmentationBody" resultType="cn.rongcapital.mkt.po.SegmentationBody">
+		<![CDATA[SELECT]]>
+		<include refid="QUERY_COLUMN_LIST"/>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+		<include refid="QUERY_ORDER_LIMIT_CONDTION"/>
+	</select>
+
+	<!-- 总数查询,通过条件 -->
+	<select id="selectListCount" parameterType="cn.rongcapital.mkt.po.SegmentationBody" resultType="int">
+		<![CDATA[SELECT COUNT(id) AS dataCount]]>
+		<include refid="QUERY_FROM_TABLE"/>
+		<include refid="QUERY_WHERE_CLAUSE"/>
+	</select>
+	
+	<!-- 其它SQL语句 -->
+	
+	<!-- 通过head_id批量删除记录 -->
+	<update id="batchDeleteUseHeaderId" parameterType="java.lang.Integer">
+		<![CDATA[UPDATE segmentation_body]]>
+		<![CDATA[SET status = 1]]>
+		<![CDATA[WHERE head_id = #{headId} AND status = 0]]>
+	</update>
+
+	<!-- 通过head_id 查询BODY -->
+	<select id="getSegBodyUseHeaderId" parameterType="java.lang.Integer" resultType="cn.rongcapital.mkt.po.SegmentBodyWithName">
+		SELECT sb.tag_group_id as tagGroupId,
+		sb.tag_id as tagId,
+		sb.exclude as exclude,
+		sb.group_index as groupIndex
+		FROM
+		segmentation_body sb
+		WHERE sb.status = 0 and sb.head_id = #{headId}
+		ORDER BY group_index, group_seq,tag_id ASC
+	</select>
+	
+	<!-- 查询细分包含标签 -->
+	<select id="getContainTagsByHeadId" parameterType="java.lang.Integer" resultType="java.lang.String">
+		SELECT distinct sb.tag_name
+		FROM
+		segmentation_body sb
+		WHERE sb.status = 0 and sb.head_id = #{headId}
+	</select>
+	
+	<!-- 通过标签ID查询记录条数 -->
+	<select id="getCountByTagId" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT 
+			COUNT(1)
+		FROM 
+			segmentation_body
+		WHERE
+			tag_id = #{tagId}
+		AND status = 0
+	</select>
+	
+</mapper>
